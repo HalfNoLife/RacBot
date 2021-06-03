@@ -1,6 +1,6 @@
 const banedUserIds = []
 const config= require("../config.json")
-module.exports.run =async (client, message, args) => {
+module.exports.run =async(client, message, args) => {
     if(message.author.id == config.OwnerID){
         if(args[0]==undefined){
             message.reply("You forgot to precise who should I ban")
@@ -17,11 +17,10 @@ module.exports.run =async (client, message, args) => {
             }
         }
     } else {
-        message.reply("Sorry, only my owner my decide who I should ban")
+        message.reply("Sorry, only my owner may decide who I should ban")
     }
     module.exports = {banedUserIds};
 };
-
 module.exports.help = {
     name: 'ban'
 };
