@@ -2,3 +2,5 @@ config.json
 node_modules
 *.idea
 *.vscode
+logs.txt
+bans.txt
