@@ -9,10 +9,7 @@ var youTube = new YouTube();
 youTube.setKey(config.ytapikey);
 
 
-
-
-
-//Class Queue containing a server musique queue informations
+//Class Queue containing a server musique queue information
 //Array Queues, array containing all the Queues for all the servers
 var Queues = [];
 class Queue {
@@ -44,7 +41,6 @@ class Queue {
                     this.player()
                 }
             })
-            
         } else if(song[0].startsWith("https://www.youtube.com/watch?v=")){
             getMusic(song[0],this.channel).then((Music)=>{
                 this.queue.push(Music)
@@ -143,11 +139,15 @@ function conditions(message){
 function getYoutubeSearch(args,channel){
     return new Promise(function(resolve, reject) {
     youTube.search (args.join(), 1, {type:"video"}, async function(error, result) {
-    
         if (error) {
             console.log(error);
-            channel.send("Sorry their an unexpected error has occured when searching on Youtube :(")
+            if(error.code==403){
+                channel.send("Sorry quota exceeded :(")
+            } else {
+                channel.send("Sorry their an unexpected error has occured when searching on Youtube :(")
+            }
             resolve(null)
+
         }else if (result.pageInfo.totalResults == 0){
             channel.send("Sorry their is no match on youtube for your request :(")
             resolve(null)

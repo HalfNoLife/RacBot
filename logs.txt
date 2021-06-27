@@ -107,3 +107,107 @@ Name:HalfNoLife
 id:217359360098041856
 request:!dadjoke
 ----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!ping
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play skillet rise
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play https://youtu.be/0yUFtKjpxOc
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play là haut hugo tsr
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play là haut hugo tsr
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play là haut hugo tsr
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play là haut hugo tsr
+----------------------------
