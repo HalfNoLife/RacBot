@@ -5,7 +5,7 @@ module.exports.run =async (client, message, args) => {
             play[i].value.dispatcher.end()
             play[i].value.queue = []
             play[i].value.CurrentSong = null
-            play[i].value.voiceconnection.disconnect()
+            play[i].value.voiceConnection.disconnect()
             play[i].value.channel.send("See you!")
         };
     };

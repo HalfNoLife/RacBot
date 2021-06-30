@@ -16,152 +16,161 @@ class Queue {
     id="";
     queue=[];
     channel={};
-    voiceconnection={};
+    voiceConnection={};
     loop=false;
     CurrentSong=null;
     dispatcher={};
+    Stop = 0;
     constructor(message,song){
-        this.id=message.guild.id
-        this.channel=message.channel
+        this.id=message.guild.id;
+        this.channel=message.channel;
         if(conditions(message)){
             message.member.voice.channel.join().then((connection)=>{
-                this.voiceconnection=connection
-                this.addsong(song)
-            })
-        }
-    }
-    addsong(song){
+                this.voiceConnection=connection;
+                this.addSong(song);
+            });
+        };
+    };
+    addSong(song){
+        this.Stop += 1;
         if(song[0].startsWith("https://www.youtube.com/playlist?list=")){
             getPlaylist(song[0],this.channel).then((Playlist)=>{
                 var i=0;
                 for(;i<Playlist.length;i++){
-                    this.queue.push(Playlist[i])
+                    this.queue.push(Playlist[i]);
                 }
                 if(this.CurrentSong==null){
-                    this.player()
-                }
-            })
+                    this.player();
+                };
+            });
         } else if(song[0].startsWith("https://www.youtube.com/watch?v=")){
             getMusic(song[0],this.channel).then((Music)=>{
-                this.queue.push(Music)
+                this.queue.push(Music);
                 if(this.CurrentSong==null){
-                    this.player()
-                }
-            })
+                    this.player();
+                };
+            });
         } else {
             getYoutubeSearch(song,this.channel).then((Music)=>{
                 if(Music!=null){
-                    this.queue.push(Music)
+                    this.queue.push(Music);
                     if(this.CurrentSong==null){
-                        this.player()
-                    }
-                }
-            })
-        }
-    }
+                        this.player();
+                    };
+                };
+            });
+        };
+    };
     reconnectToChan(message,song){
         message.member.voice.channel.join().then((connection)=>{
-            this.channel = message.channel
-            this.voiceconnection=connection
-            this.addsong(song)
-        })
-    }
+            this.channel = message.channel;
+            this.voiceConnection=connection;
+            this.addSong(song);
+        });
+    };
     player(){
         if(this.queue.length>0){
-            this.CurrentSong=this.queue[0]
-            const embed = new Discord.MessageEmbed()
-            embed.setColor('#ff0000')
-            embed.setTitle("Now playing : \n"+this.CurrentSong.MusicTitle)
-            embed.setURL(this.CurrentSong.MusicUrl)
-            embed.setImage(this.CurrentSong.MusicThumbnail)
-            this.channel.send(embed)
-            this.dispatcher = this.voiceconnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly"},{ quality: '140' },{highWaterMark:1024*128})).on("finish",()=>{
+            this.CurrentSong=this.queue[0];
+            const embed = new Discord.MessageEmbed();
+            embed.setColor('#ff0000');
+            embed.setTitle("Now playing : \n"+this.CurrentSong.MusicTitle);
+            embed.setURL(this.CurrentSong.MusicUrl);
+            embed.setImage(this.CurrentSong.MusicThumbnail);
+            this.channel.send(embed);
+            this.dispatcher = this.voiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly"},{ quality: '140' },{highWaterMark:1024*128})).on("finish",()=>{
                 if (this.loop){
-                    this.queue.push(this.queue[0])
+                    this.queue.push(this.queue[0]);
                     this.queue.shift();
-                    this.player()
+                    this.player();
                 } else {
                     this.queue.shift();
-                    this.player()
-                }
-            })
-            this.voiceconnection.on("disconnect",()=>{
+                    this.player();
+                };
+            });
+            this.voiceConnection.on("disconnect",()=>{
 
-                if(this.voiceconnection!=null){
-                    this.channel.send("See you!")
-                }
-                this.voiceconnection = null
-                this.dispatcher.end()
-                this.queue = []
-                this.CurrentSong = null
-            })
+                if(this.voiceConnection!=null){
+                    this.channel.send("See you!");
+                };
+                this.voiceConnection = null;
+                this.dispatcher.end();
+                this.queue = [];
+                this.CurrentSong = null;
+            });
 
         } else {
-            this.queue=[]
-            this.channel.send("Queue is now empty")
+            this.queue=[];
+            this.channel.send("Queue is now empty");
             this.CurrentSong=null;
-            this.voiceconnection.disconnect()
-        }
-    }
-}
+            //this.voiceConnection.disconnect();
+            var start = this.Stop;
+            setTimeout(()=>{
+                if(start==this.Stop){
+                    this.voiceConnection.disconnect()
+                    this.channel.send("I left the channel because I was afk for too long")
+                }
+            },5*60*1000)//5 minutes
+        };
+    };
+};
 module.exports.run = (client, message, args) => {
     if(conditions(message)){
         var found=false
         for(i=0;i<Queues.length&&!found;i++){
             if(Queues[i].key==message.guild.id){
-                var found = true
-                Queues[i].value.reconnectToChan(message,args)
-            }
-        }
+                var found = true;
+                Queues[i].value.reconnectToChan(message,args);
+            };
+        };
         if(!found){
             Queues.push({
                 key:message.guild.id,
                 value:new Queue(message,args)
             })
-        }
-    }
+        };
+    };
     module.exports=Queues;
-}
+};
 function conditions(message){
     if (!message.member.voice.channel){
-        message.reply("You must be in a voice channel to use this command. If you are in one check its permissions.")
-        return false
+        message.reply("You must be in a voice channel to use this command. If you are in one check its permissions.");
+        return false;
     } else {
-    const permissions = message.member.voice.channel.permissionsFor(message.client.user)
+    const permissions = message.member.voice.channel.permissionsFor(message.client.user);
         if (!permissions.has("CONNECT") || !permissions.has("SPEAK")){
-            message.reply("I need permissions to talk and to connect on the channel you are using.")
-            return false
+            message.reply("I need permissions to talk and to connect on the channel you are using.");
+            return false;
         } else { 
-            return true
-        }
-    }
-}
+            return true;
+        };
+    };
+};
 function getYoutubeSearch(args,channel){
     return new Promise(function(resolve, reject) {
     youTube.search (args.join(), 1, {type:"video"}, async function(error, result) {
         if (error) {
             console.log(error);
             if(error.code==403){
-                channel.send("Sorry quota exceeded :(")
+                channel.send("Sorry request quota exceeded :(, You will have to wait until tomorrow for the quota to reset");
             } else {
-                channel.send("Sorry their an unexpected error has occured when searching on Youtube :(")
+                channel.send("Sorry their an unexpected error has occurred when searching on Youtube :(");
             }
             resolve(null)
 
         }else if (result.pageInfo.totalResults == 0){
-            channel.send("Sorry their is no match on youtube for your request :(")
-            resolve(null)
+            channel.send("Sorry their is no match on youtube for your request :(");
+            resolve(null);
         } else {
             MusicUrl="https://www.youtube.com/watch?v="+ result.items[0].id.videoId;
-            MusicTitle=JSON.stringify(result.items[0].snippet.title).replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,"&")
-            MusicTitle = removeByIndex(removeByIndex(MusicTitle,MusicTitle.length-1),0)
-            MusicThumbnail=((await ytdl.getBasicInfo(MusicUrl)).videoDetails.thumbnails[3].url)
-            Music={MusicUrl,MusicTitle,MusicThumbnail}
-            channel.send(MusicTitle+" was added to the queue")
-            resolve(Music)
-        }
-    })})
-}
+            MusicTitle=JSON.stringify(result.items[0].snippet.title).replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,"&");
+            MusicTitle = removeByIndex(removeByIndex(MusicTitle,MusicTitle.length-1),0);
+            MusicThumbnail=((await ytdl.getBasicInfo(MusicUrl)).videoDetails.thumbnails[3].url);
+            Music={MusicUrl,MusicTitle,MusicThumbnail};
+            channel.send(MusicTitle+" was added to the queue");
+            resolve(Music);
+        };
+    })});
+};
 
 
 //search the corresponding playlist to url on youtube returns an array of Musics
