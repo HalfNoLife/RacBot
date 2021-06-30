@@ -13,12 +13,15 @@ module.exports = async(client, message) => {
         }
     }
     const args= message.content.slice(prefix.length).trim().split(/ +/g);
-    const commande = args.shift();
-    const cmd = client.commands.get(commande);
+    const command = args.shift();
+    console.log(command)
+    const cmd = client.commands.get(command);
     if(!cmd) return;
     cmd.run(client, message, args);
     addLog(message)
 };
+
+
 function addLog(message){
     console.log("Trying to add log")
     fs.appendFile('./logs.txt', ("Name:"+message.author.username+"\nid:"+message.author.id+"\nrequest:"+message.content)+'\n----------------------------\n', function (err) {

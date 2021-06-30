@@ -24,5 +24,6 @@ randomPuppy(SubReddit)
 
 }
 module.exports.help = {
-    name: 'meme'
+    name: 'meme',
+    description:'sends a meme'
 }

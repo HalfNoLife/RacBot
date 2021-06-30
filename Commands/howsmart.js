@@ -17,5 +17,6 @@ module.exports.run = (client, message, args) => {
 }
 
 module.exports.help = {
-    name: 'howsmart'
+    name: 'howsmart',
+    description:'tells how smart you are'
 };

@@ -11,5 +11,6 @@ module.exports.run = (client, message, args) => {
 };
 
 module.exports.help = {
-    name: 'relationship'
+    name: 'relationship',
+    description:'asks a random user on the server whether or not he wants to marry you'
 };

@@ -19,5 +19,6 @@ module.exports.run = (client, message, args) => {
 };
 
 module.exports.help = {
-    name: 'help'
+    name: 'help',
+    description:'gives detailed information about commands usage'
 };

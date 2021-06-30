@@ -241,5 +241,6 @@ function formatURL(url){
     return id
 }
 module.exports.help = {
-    name: 'play'
+    name: 'play',
+    description:'adds the given music by searching for it on youtube to the queue'
 };

@@ -11,5 +11,6 @@ module.exports.run =async (client, message, args) => {
         }}
 };
 module.exports.help = {
-    name: 'join'
+    name: 'join',
+    description:'makes me join your voice channel'
 };

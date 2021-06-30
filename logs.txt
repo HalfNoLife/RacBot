@@ -231,3 +231,15 @@ Name:HalfNoLife
 id:217359360098041856
 request:!skip
 ----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play skillet rise
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!ping
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!ping
+----------------------------

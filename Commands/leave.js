@@ -11,5 +11,6 @@ module.exports.run =async (client, message, args) => {
     };
 };
 module.exports.help = {
-    name: 'leave'
+    name: 'leave',
+    description:'leaves the voice channel'
 };

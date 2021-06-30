@@ -30,5 +30,6 @@ module.exports.run =async (client, message, args) => {
     req.end();
 };
 module.exports.help = {
-    name: 'dadjoke'
+    name: 'dadjoke',
+    description:'sends a dad joke'
 };

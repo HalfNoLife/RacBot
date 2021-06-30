@@ -6,5 +6,6 @@ module.exports.run =async (client, message, args) => {
     message.channel.send(str)
 };
 module.exports.help = {
-    name: 'echo'
+    name: 'echo',
+    description:'repeats the message'
 };

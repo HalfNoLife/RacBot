@@ -56,5 +56,6 @@ function toWrittenFormat(args){
 }
 
 module.exports.help = {
-    name: 'weather'
+    name: 'weather',
+    description:'sends the weather in the specified town'
 };

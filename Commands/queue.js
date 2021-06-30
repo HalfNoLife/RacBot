@@ -27,5 +27,6 @@ module.exports.run =async (client, message, args) => {
 };
 
     module.exports.help = {
-        name: 'queue'
+        name: 'queue',
+        description:'sends information about the server music queue'
     };
