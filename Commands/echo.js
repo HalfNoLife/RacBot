@@ -7,5 +7,11 @@ module.exports.run =async (client, message, args) => {
 };
 module.exports.help = {
     name: 'echo',
-    description:'repeats the message'
+    description:'repeats the message',
+    options:[{
+        "name":"message",
+        "description":"the message to repeat",
+        "required":false,
+        "type":5
+    }]
 };

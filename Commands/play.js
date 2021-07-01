@@ -242,5 +242,13 @@ function formatURL(url){
 }
 module.exports.help = {
     name: 'play',
-    description:'adds the given music by searching for it on youtube to the queue'
+    description:'adds the given music by searching for it on youtube to the queue',
+    options:[
+        {
+            "name":"music",
+            "description":"the music you want to play",
+            "required":true,
+            "type":5
+        }
+    ]
 };

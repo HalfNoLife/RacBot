@@ -9,14 +9,14 @@ const GlobalCommands = []
 const https=require("https")
 fs.readdir("./Commands/",(error, f) =>{
     if(error) console.log(error);
-    
+
     let commands = f.filter(f => f.split(".").pop() === "js");
     if(commands.length <=0) return console.log("No commands found !")
-    
+
     commands.forEach((f) => {
         let command = require(`./Commands/${f}`);
         client.commands.set(command.help.name, command);
-        GlobalCommands.push({name:command.help.name,description:command.help.description})
+        GlobalCommands.push({name:command.help.name,description:command.help.description,options:command.help.options})
         console.log("Command loaded: "+ command.help.name)
     });
 });
@@ -36,10 +36,11 @@ client.on('ready',()=>{
     console.log("Client ready, retrieving commands")
     getCommands().then((SlashCommands)=>{
         for(var i=0;i<SlashCommands.length;i++){
+            console.log(SlashCommands[i])
             removeCommand(SlashCommands[i].id)
         }
         for(var i=0;i<GlobalCommands.length;i++){
-            postCommand(GlobalCommands[i].name,GlobalCommands[i].description)
+            postCommand(GlobalCommands[i].name,GlobalCommands[i].description,GlobalCommands[i].options)
         }
     })
 })
@@ -49,10 +50,11 @@ function removeCommand(id){
     console.log("Command removed")
 }
 
-function postCommand(name,description){
+function postCommand(name,description,options){
     client.api.applications(client.user.id).commands.post({data:{
             name: name,
-            description: description
+            description: description,
+            options:options
         }})
     console.log("Command: "+name+" pushed")
 }

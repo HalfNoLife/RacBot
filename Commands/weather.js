@@ -57,5 +57,11 @@ function toWrittenFormat(args){
 
 module.exports.help = {
     name: 'weather',
-    description:'sends the weather in the specified town'
+    description:'sends the weather in the specified town',
+    options:[{
+        "name":"town",
+        "description":"The name of the town where you want the weather",
+        "required":true,
+        "type":5
+    }]
 };

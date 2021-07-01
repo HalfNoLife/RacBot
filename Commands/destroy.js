@@ -9,5 +9,6 @@ module.exports.run =async (client, message, args) => {
 };
 module.exports.help = {
     name: 'destroy',
-    description:'destroys the current music queue'
+    description:'destroys the current music queue',
+    options:[]
 };

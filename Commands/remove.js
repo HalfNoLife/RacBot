@@ -16,5 +16,11 @@ for (i=0;i<play.length;i++){
 };
 module.exports.help = {
     name: 'remove',
-    description:'removes by index a music in the server queue'
+    description:'removes by index a music in the server queue',
+    options:[{
+        "name":"position",
+        "description":"the place of the music in the queue",
+        "required":false,
+        "type":5
+    }]
 };

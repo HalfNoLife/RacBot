@@ -22,5 +22,6 @@ message.channel.send(loopInfo)
 }
 module.exports.help = {
     name: 'loop',
-    description:'loops the current music queue'
+    description:'loops the current music queue',
+    options:[]
 };

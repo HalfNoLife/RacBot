@@ -19,5 +19,6 @@ if (!found){
 };
 module.exports.help = {
     name: 'skip',
-    description:'skips the current music in the queue'
+    description:'skips the current music in the queue',
+    options:[]
 };

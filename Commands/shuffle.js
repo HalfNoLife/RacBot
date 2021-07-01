@@ -9,7 +9,8 @@ module.exports.run =async (client, message, args) => {
 };
 module.exports.help = {
     name: 'shuffle',
-    description:'shuffles the server music queue'
+    description:'shuffles the server music queue',
+    options:[]
 };
 
 function shuffle(arr){

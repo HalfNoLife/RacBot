@@ -8,5 +8,6 @@ module.exports.run = (client, message, args,interaction=null) => {
 
 module.exports.help = {
     name: 'ping',
-    description:'pings the bot'
+    description:'pings the bot',
+    options:[]
 };

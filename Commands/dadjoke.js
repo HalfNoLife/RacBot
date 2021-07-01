@@ -31,5 +31,6 @@ module.exports.run =async (client, message, args) => {
 };
 module.exports.help = {
     name: 'dadjoke',
-    description:'sends a dad joke'
+    description:'sends a dad joke',
+    options:[]
 };

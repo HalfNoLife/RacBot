@@ -9,5 +9,6 @@ module.exports.run =async (client, message, args) => {
 };
 module.exports.help = {
     name: 'resume',
-    description:'resumes the music'
+    description:'resumes the music',
+    options:[]
 };

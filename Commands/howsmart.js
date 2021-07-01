@@ -18,5 +18,13 @@ module.exports.run = (client, message, args) => {
 
 module.exports.help = {
     name: 'howsmart',
-    description:'tells how smart you are'
+    description:'tells how smart you are',
+    options:[
+        {
+            "name":"someone",
+            "description":"The person or the thing you want to know the IQ",
+            "required":false,
+            "type":5
+        }
+    ]
 };
