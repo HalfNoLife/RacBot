@@ -35,13 +35,17 @@ fs.readdir("./Events/", (error, f) => {
 client.on('ready',()=>{
     console.log("Client ready, retrieving commands")
     getCommands().then((SlashCommands)=>{
-        for(var i=0;i<SlashCommands.length;i++){
-            console.log(SlashCommands[i])
-            removeCommand(SlashCommands[i].id)
-        }
         for(var i=0;i<GlobalCommands.length;i++){
-            postCommand(GlobalCommands[i].name,GlobalCommands[i].description,GlobalCommands[i].options)
+            if(!isPresent(GlobalCommands[i],SlashCommands)){
+                postCommand(GlobalCommands[i])
+            }
         }
+        for(var i=0;i<SlashCommands.length;i++){
+            if(!isPresent(SlashCommands[i],GlobalCommands)){
+                removeCommand(SlashCommands[i].id)
+            }
+        }
+        console.log("Commands managed(not updated)")
     })
 })
 
@@ -50,13 +54,13 @@ function removeCommand(id){
     console.log("Command removed")
 }
 
-function postCommand(name,description,options){
+function postCommand(command){
     client.api.applications(client.user.id).commands.post({data:{
-            name: name,
-            description: description,
-            options:options
+            name: command.name,
+            description: command.description,
+            options:command.options
         }})
-    console.log("Command: "+name+" pushed")
+    console.log("Command: "+command.name+" pushed")
 }
 
 
@@ -67,17 +71,46 @@ async function getCommands(){
     })
 }
 
-client.ws.on('INTERACTION_CREATE', async interaction => {
-    console.log(interaction)
-    const cmd = client.commands.get(interaction.data.name)
-    //client.channels.cache.get(interaction.channel_id).send("lol")
-    console.log(cmd)
-    client.api.interactions(interaction.id,interaction.token).callback.post({
-        data:{
-            type:4,
-            data:{
-                content:"Sorry I don't handle requests this way for now. You can use !"+interaction.data.name+" instead."
-            }
+function isPresent(command,commands){
+    for(var i=0;i<commands.length;i++){
+        if(commands[i].name==command.name){
+            return true
         }
+    }
+    return false
+}
+
+client.ws.on('INTERACTION_CREATE', async interaction => {
+    var args;
+    if(interaction.data.options != undefined){
+        args = interaction.data.options[0].value.split(/ +/g);
+    } else {
+        args = null;
+    }
+    const cmd = client.commands.get(interaction.data.name)
+    cmd.run(client,interaction.channel_id,interaction.member.user.id,args).then(async (res)=>{
+        let data = {
+            content:res
+        }
+        //Check for embeds
+        if(typeof res==='object'){
+            data = await createAPImessage(interaction,res)
+        }
+        client.api.interactions(interaction.id,interaction.token).callback.post({
+            data:{
+                type:4,
+                data
+            }
+        })
     })
 })
+
+async function createAPImessage(interaction, content){
+    const {data,files} = await Discord.APIMessage.create(
+        client.channels.resolve(interaction.channel_id),
+        content
+    )
+        .resolveData()
+        .resolveFiles()
+    return{...data,files}
+}

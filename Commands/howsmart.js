@@ -1,19 +1,24 @@
 const Discord = require('discord.js');
 const config = require("../config.json");
-module.exports.run = (client, message, args) => {
-    if ( args == "" ) {
-        if(message.author.id == config.OwnerID){
-            message.channel.send( "<@" + message.author.id + ">" + "'s IQ = " + "infinity");
-        } else {
-            message.channel.send( "<@" + message.author.id + ">" + "'s IQ = " + Math.floor(Math.random() * 255));
+module.exports.run = (client, channelID, authorID, args) => {
+    console.log(authorID)
+    console.log(args)
+    return new Promise(function (resolve, reject){
+        if ( args == null || args.length==0) {
+            console.log("args are null")
+            resolve("<@"+authorID + "> 's IQ = " + Math.floor(Math.random() * 255))
         }
-
-    }
-    else {
-        message.channel.send(args+ "'s IQ is " + Math.floor(Math.random() * 255));
-        
-    }
-    
+        else {
+            var str = ""
+            for(var i=0;i<args.length;i++){
+                for(var y=0;y<args[i].length;y++){
+                    str+=args[i][y]
+                }
+                str+=" "
+            }
+            resolve(str+ "'s IQ is " + Math.floor(Math.random() * 255));
+        }
+    })
 }
 
 module.exports.help = {
