@@ -7,6 +7,8 @@ client.commands = new Discord.Collection();
 console.log("Online!")
 const GlobalCommands = []
 const https=require("https")
+module.exports = client
+const ServerInfo = require("./ServerInfos").ServerInfo
 fs.readdir("./Commands/",(error, f) =>{
     if(error) console.log(error);
 
@@ -47,6 +49,10 @@ client.on('ready',()=>{
         }
         console.log("Commands managed(not updated)")
     })
+    let servers = client.guilds.cache.array()
+    for(let i=0;i<servers.length;i++){
+        new ServerInfo(servers[i].id)
+    }
 })
 
 function removeCommand(id){
@@ -88,7 +94,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         args = null;
     }
     const cmd = client.commands.get(interaction.data.name)
-    cmd.run(client,interaction.channel_id,interaction.member.user.id,args).then(async (res)=>{
+    cmd.run(client,client.channels.resolve(interaction.channel_id),interaction.member.user.id,args).then(async (res)=>{
         let data = {
             content:res
         }
@@ -114,3 +120,4 @@ async function createAPImessage(interaction, content){
         .resolveFiles()
     return{...data,files}
 }
+

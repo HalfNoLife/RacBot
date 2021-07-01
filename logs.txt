@@ -327,3 +327,7 @@ Name:HalfNoLife
 id:217359360098041856
 request:!howsmart <@!707600341251915917>
 ----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!play skillet rise
+----------------------------

@@ -1,4 +1,4 @@
-module.exports.run = (client, channelID, authorID, args) => {
+module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve, reject){
         const message = "!help --- gives you the different commands syntax\n" +
             "!ping --- Pings the bot\n!leave --- disconnects me from your voice channel\n" +

@@ -4,7 +4,7 @@ const { Attachment, RichEmbed } = require('discord.js');
 /*
 * TODO NEEDS TO BE FIXED HAS SOMETIMES GETTING A MEME WILL RESULT IN PARSING ERROR
 */
-module.exports.run = (client, channelID, authorID, args) => {
+module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve,reject){
         const SubReddits = ["memes","dankmemes","meirl","historymemes","deepfriedmemes"]
         const Titles = ["Here's your meme !","Hahaha good one!\n(I don't really see what's beneath me)","Roses are red, violets are blue, I send memes"]

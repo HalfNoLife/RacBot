@@ -18,7 +18,7 @@ module.exports = async(client, message) => {
     const cmd = client.commands.get(command);
     if(!cmd) return;
     //console.log(message.author.username)
-    cmd.run(client, message.channel.id, message.author.id , args).then((res)=>{
+    cmd.run(client, message.channel, message.author.id , args).then((res)=>{
         message.channel.send(res)
     });
     addLog(message)

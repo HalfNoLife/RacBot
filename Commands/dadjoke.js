@@ -1,7 +1,7 @@
 const http = require("https")
 const config = require("../config.json")
 var message = "";
-module.exports.run =(client, channelID, authorID, args) => {
+module.exports.run =(client, channel, authorID, args) => {
     return new Promise(function (resolve, reject){
         const options = {
             "method": "GET",

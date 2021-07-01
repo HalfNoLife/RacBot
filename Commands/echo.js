@@ -1,4 +1,4 @@
-module.exports.run =async (client, channelID, authorID, args) => {
+module.exports.run =async (client, channel, authorID, args) => {
     return new Promise(function (resolve,reject){
         console.log(args)
         str=""
