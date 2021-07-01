@@ -248,7 +248,7 @@ module.exports.help = {
             "name":"music",
             "description":"the music you want to play",
             "required":true,
-            "type":5
+            "type":3
         }
     ]
 };

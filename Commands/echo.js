@@ -12,6 +12,6 @@ module.exports.help = {
         "name":"message",
         "description":"the message to repeat",
         "required":false,
-        "type":5
+        "type":3
     }]
 };

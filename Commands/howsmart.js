@@ -24,7 +24,7 @@ module.exports.help = {
             "name":"someone",
             "description":"The person or the thing you want to know the IQ",
             "required":false,
-            "type":5
+            "type":3
         }
     ]
 };

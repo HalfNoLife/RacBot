@@ -21,6 +21,6 @@ module.exports.help = {
         "name":"position",
         "description":"the place of the music in the queue",
         "required":false,
-        "type":5
+        "type":4
     }]
 };

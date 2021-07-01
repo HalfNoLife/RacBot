@@ -62,6 +62,6 @@ module.exports.help = {
         "name":"town",
         "description":"The name of the town where you want the weather",
         "required":true,
-        "type":5
+        "type":3
     }]
 };
