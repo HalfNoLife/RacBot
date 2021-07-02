@@ -43,7 +43,26 @@ class ServerInfo {
         })
     }
     player(){
-        this.Dispatcher = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly"}))
+        const embed = new Discord.MessageEmbed();
+        embed.setColor('#ff0000');
+        embed.setTitle("Now playing : \n"+this.CurrentSong.MusicTitle);
+        embed.setURL(this.CurrentSong.MusicUrl);
+        embed.setImage(this.CurrentSong.MusicThumbnail);
+        this.Channel.send(embed);
+        this.Dispatcher = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly",highWaterMark:1024*128,quality:"140"})).on("finish",()=>{
+            if (this.Loop){
+                this.PlayList.push(this.PlayList[0]);
+            }
+            this.PlayList.shift();
+            if(this.PlayList.length>0){
+                this.CurrentSong = this.PlayList[0]
+                this.player();
+            } else {
+                this.Channel.send("Playlist is now empty")
+                this.CurrentSong = null;
+            }
+
+        });
     }
 
 }
