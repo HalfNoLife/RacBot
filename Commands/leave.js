@@ -1,14 +1,16 @@
-module.exports.run =async (client, message, args) => {
-    const play = require ("./play");
-    for (i=0;i<play.length;i++){
-        if (message.guild.id==play[i].key){
-            play[i].value.dispatcher.end()
-            play[i].value.queue = []
-            play[i].value.CurrentSong = null
-            play[i].value.voiceConnection.disconnect()
-            play[i].value.channel.send("See you!")
+module.exports.run =async (client, channel, author, args) => {
+    const ServerInfos = require ("../ServerInfos").ServerInfos;
+    return new Promise(function (resolve, reject){
+        for (let i=0;i<ServerInfos.length;i++){
+            if (channel.guild.id==ServerInfos[i].ID){
+                ServerInfos[i].Dispatcher.end()
+                ServerInfos[i].PlayList = []
+                ServerInfos[i].CurrentSong = null
+                ServerInfos[i].VoiceConnection.disconnect()
+                resolve("See you")
+            };
         };
-    };
+    })
 };
 module.exports.help = {
     name: 'leave',
