@@ -1,11 +1,13 @@
-module.exports.run =async (client, message, args) => {
-    const play = require ("./play");
-    for (i=0;i<play.length;i++){
-        if (message.guild.id==play[i].key){
-            shuffle(play[i].value.queue)
-            message.channel.send("shuffled")
+module.exports.run =async (client, channel, authorID, args) => {
+    const ServerInfos = require("../ServerInfos").ServerInfos
+    return new Promise(function (resolve,reject){
+        for (let i=0;i<ServerInfos.length;i++){
+            if (channel.guild.id==ServerInfos[i].ID){
+                shuffle(ServerInfos[i].PlayList)
+                resolve("shuffled")
+            };
         };
-    };
+    })
 };
 module.exports.help = {
     name: 'shuffle',
@@ -14,9 +16,9 @@ module.exports.help = {
 };
 
 function shuffle(arr){
-    for(i=0;i<arr.length;i++){
-        j=Math.floor(Math.random() * arr.length);
-        mem = arr[j]
+    for(let i=0;i<arr.length;i++){
+        let j=Math.floor(Math.random() * arr.length);
+        let mem = arr[j]
         arr[j] = arr[i]
         arr[i] = mem
     }
