@@ -1,7 +1,7 @@
 module.exports.run =async (client, channel, authorID, args) => {
     const ServerInfos = require("../ServerInfos").ServerInfos
     return new Promise(function (resolve, reject){
-        for (i=0;i<ServerInfos.length;i++){
+        for (let i=0;i<ServerInfos.length;i++){
             if (ServerInfos[i].ID==channel.guild.id && ServerInfos[i].AudioStream != null){
                 console.log(ServerInfos[i].AudioStream)
                 ServerInfos[i].AudioStream.resume()

@@ -49,7 +49,7 @@ class ServerInfo {
             console.log(args[0])
             if(args[0]==undefined){
                 resolve("You need to specify a music to play")
-            } else if(args[0].includes("playlist?list=")){
+            } else if(args[0].includes("list=")){
                 getYTPlaylist(getYTPlaylistID(args[0])).then((res)=>{
                     resolve(res)
                 })
@@ -132,8 +132,8 @@ function removeByIndex(str,index) {
 }
 function getYTPlaylistID(url){
     for(let i=0;i<url.length;i++){
-        if(url.substr(i,14)=="playlist?list="){
-            return url.substr(i+14,34)
+        if(url.substr(i,5)=="list="){
+            return url.substr(i+5,34)
         }
     }
 }
