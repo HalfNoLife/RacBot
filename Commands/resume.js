@@ -1,11 +1,14 @@
-module.exports.run =async (client, message, args) => {
-    const play = require ("./play");
-    for (i=0;i<play.length;i++){
-        if (message.guild.id==play[i].key){
-            play[i].value.dispatcher.resume()
-            play[i].value.channel.send("Music resumed!")
+module.exports.run =async (client, channel, authorID, args) => {
+    const ServerInfos = require("../ServerInfos").ServerInfos
+    return new Promise(function (resolve, reject){
+        for (i=0;i<ServerInfos.length;i++){
+            if (ServerInfos[i].ID==channel.guild.id && ServerInfos[i].AudioStream != null){
+                console.log(ServerInfos[i].AudioStream)
+                ServerInfos[i].AudioStream.resume()
+                resolve("Music resumed")
+            };
         };
-    };
+    })
 };
 module.exports.help = {
     name: 'resume',

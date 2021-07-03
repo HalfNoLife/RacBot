@@ -15,7 +15,7 @@ class ServerInfo {
     VoiceConnection
     Loop
     CurrentSong
-    Dispatcher
+    AudioStream
     Stop
     constructor(ServerID) {
         this.ID = ServerID;
@@ -24,7 +24,7 @@ class ServerInfo {
         this.Loop = false;
         this.Stop = 0;
         this.CurrentSong = null
-        this.Dispatcher = null
+        this.AudioStream = null
         ServerInfos.push(this)
     }
     join(GuildID,AuthorID,channel){
@@ -72,19 +72,21 @@ class ServerInfo {
         embed.setURL(this.CurrentSong.MusicUrl);
         embed.setImage(this.CurrentSong.MusicThumbnail);
         this.Channel.send(embed);
-        this.Dispatcher = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly",highWaterMark:1024*128,quality:"140"})).on("finish",()=>{
-            if (this.Loop){
-                this.PlayList.push(this.PlayList[0]);
-            }
-            this.PlayList.shift();
-            if(this.PlayList.length>0){
-                this.CurrentSong = this.PlayList[0]
-                this.player();
-            } else {
-                this.Channel.send("Playlist is now empty")
-                this.CurrentSong = null;
-            }
-        });
+        this.AudioStream = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly",highWaterMark:1024*128,quality:"140"}))
+            .on("finish",()=>{
+                if (this.Loop){
+                    this.PlayList.push(this.PlayList[0]);
+                }
+                this.PlayList.shift();
+                if(this.PlayList.length>0){
+                    this.CurrentSong = this.PlayList[0]
+                    this.player();
+                } else {
+                    this.Channel.send("Playlist is now empty")
+                    this.CurrentSong = null;
+                }
+            });
+
     }
     /*
     * 0 -> OK
