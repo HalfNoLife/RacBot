@@ -31,9 +31,11 @@ class ServerInfo {
         this.Channel = channel;
         let conditions = this.conditions(channel,AuthorID)
         return new Promise(function (resolve, reject){
-            if(!conditions){
+            if(conditions==1){
                 resolve("You need to be in a voice channel")
-            } else {
+            } else if(conditions==2){
+                resolve("I don't have permission to speak or to connect to your voice channel")
+            }else {
                 client.guilds.resolve(GuildID).members.resolve(AuthorID).voice.channel.join().then((connection)=>{
                     resolve(connection)
                 });
@@ -84,12 +86,20 @@ class ServerInfo {
             }
         });
     }
+    /*
+    * 0 -> OK
+    * 1 -> Author not connected
+    * 2 -> Authorization issue
+    */
     conditions(channel,authorID){
-        //console.log(client.guilds.resolve(channel.guild.id).members.resolve(authorID))
-        if(client.guilds.resolve(channel.guild.id).members.resolve(authorID) != null){
-            return true
+        console.log(client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel)
+        if(client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel == null){
+            return 1
+        } else if(!client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel.permissionsFor(client.user).has("CONNECT")
+            ||!client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel.permissionsFor(client.user).has("SPEAK")){
+            return 2
         }
-        return false
+        return 0
     }
 }
 

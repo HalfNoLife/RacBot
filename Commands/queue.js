@@ -19,7 +19,6 @@ module.exports.run =async (client, channel,authorID, args) => {
                         queueInfos=""
                     }
                 }
-                console.log("blabla")
                 if(ServerInfos[i].PlayList.length==0){
                     console.log("Playlist is empty")
                     queueInfos="There is no song on your server playlist for now\n"
