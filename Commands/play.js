@@ -11,17 +11,22 @@ module.exports.run = (client, channel, authorID, args) => {
                         if(typeof (res)==='string'){
                             resolve(res)
                         } else {
-                            ServerInfos[i].PlayList.push(res)
-                            for(let x=0;x<ServerInfos[i].PlayList.length;x++){
-                                console.log(ServerInfos[i].PlayList[x])
+                            if(res.Playlist!=undefined){
+                                for(let pos=0;pos<res.Playlist.length;pos++){
+                                    ServerInfos[i].PlayList.push(res.Playlist[pos])
+                                }
+                                resolve("Playlist: "+res.Title+" was added to the queue")
+                            } else {
+                                ServerInfos[i].PlayList.push(res)
+                                for(let x=0;x<ServerInfos[i].PlayList.length;x++){
+                                    console.log(ServerInfos[i].PlayList[x])
+                                }
+                                resolve(res.MusicTitle+" was added to the queue")
                             }
                             if(ServerInfos[i].CurrentSong==null){
-                                ServerInfos[i].CurrentSong = res
+                                ServerInfos[i].CurrentSong = ServerInfos[i].PlayList[0]
                                 ServerInfos[i].player()
-                                console.log("Player called")
-                            }
-                            resolve(res.MusicTitle+" was added to the queue")
-                        }
+                            }}
                     })
                 })
 
