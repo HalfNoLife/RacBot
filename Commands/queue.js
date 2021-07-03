@@ -1,29 +1,50 @@
-module.exports.run =async (client, message, args) => {
-    const play = require ("./play");
-    found=false;
-    for (i=0;i<play.length;i++){
-        if((message.guild.id==play[i].key)&&(play[i].value.queue.length>0)){
-            found=true;
-            var queueInfos ="Your current server Music Queue is:\n";
-            for(q=0;q<play[i].value.queue.length;q++){
-                queueInfos=queueInfos+(q+1)+": "+play[i].value.queue[q].MusicTitle+"\n"
-                if(queueInfos.length>1500){
-                    message.channel.send(queueInfos)
-                    queueInfos=""
+module.exports.run =async (client, channel,authorID, args) => {
+    return new Promise(function (resolve, reject){
+        console.log("Queue called")
+        const ServerInfos = require ("../ServerInfos").ServerInfos;
+        for (let i=0;i<ServerInfos.length;i++){
+            if((channel.guild.id==ServerInfos[i].ID)){
+                var answered = false;
+                console.log("Server found")
+                var queueInfos ="Your current server Music Queue is:\n";
+                for(let q=0;q<ServerInfos[i].PlayList.length;q++){
+                    queueInfos=queueInfos+(q+1)+": "+ServerInfos[i].PlayList[q].MusicTitle+"\n"
+                    if(queueInfos.length>1500){
+                        if(!answered){
+                            resolve(queueInfos)
+                            answered = true
+                        } else {
+                            channel.send(queueInfos)
+                        }
+                        queueInfos=""
+                    }
                 }
+                console.log("blabla")
+                if(ServerInfos[i].PlayList.length==0){
+                    console.log("Playlist is empty")
+                    queueInfos="There is no song on your server playlist for now\n"
+                }
+                if(ServerInfos[i].Loop){
+                    queueInfos=queueInfos+("And the playlist is currently looping")
+                } else {
+                    queueInfos=queueInfos+("And the playlist is currently not looping")
+                }
+                if(ServerInfos[i].CurrentSong!=null){
+                    queueInfos+="\nCurrently playing: "+ServerInfos[i].CurrentSong.MusicTitle
+                }
+                if(!answered){
+                    console.log("not answered")
+                    resolve(queueInfos)
+                } else {
+                    console.log("answered")
+                    channel.send(queueInfos)
+                }
+
             }
-            if(play[i].value.loop){
-                queueInfos=queueInfos+("And the playlist is currently looping")
-            } else {
-                queueInfos=queueInfos+("And the playlist is currently not looping")
-            }
+
         }
-    }
-    if (!found){
-        message.channel.send("sorry but it seems like no playlist are currently running on your server")
-    } else {
-        message.channel.send(queueInfos);
-    }
+        resolve("error")
+    })
 };
 
     module.exports.help = {

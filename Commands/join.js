@@ -1,14 +1,13 @@
-module.exports.run =async (client, message, args) => {
-    if (!message.member.voice.channel){
-        message.reply("You must be in a voice channel to use this command. If you are in one check its permissions.")
-    } else {
-    const permissions = message.member.voice.channel.permissionsFor(message.client.user)
-        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")){
-            message.reply("I need permissions to talk and to connect on the channel you are using.")
-        } else {
-            message.member.voice.channel.join();
-            message.reply("I'm here!")
-        }}
+module.exports.run =async (client, channel, authorID, args) => {
+    const ServerInfos = require("../ServerInfos").ServerInfos
+    return new Promise(function (resolve, reject){
+        for(let i=0;i<ServerInfos.length;i++){
+            if(ServerInfos[i].ID==channel.guild.ID){
+                ServerInfos[i].join(channel.guild.id,authorID,channel)
+                resolve("Joined")
+            }
+        }
+    })
 };
 module.exports.help = {
     name: 'join',

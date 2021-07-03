@@ -29,11 +29,18 @@ class ServerInfo {
     }
     join(GuildID,AuthorID,channel){
         this.Channel = channel;
+        let conditions = this.conditions(channel,AuthorID)
         return new Promise(function (resolve, reject){
-            client.guilds.resolve(GuildID).members.resolve(AuthorID).voice.channel.join().then((connection)=>{
-                resolve(connection)
-            });
+            if(!conditions){
+                resolve("You need to be in a voice channel")
+            } else {
+                client.guilds.resolve(GuildID).members.resolve(AuthorID).voice.channel.join().then((connection)=>{
+                    resolve(connection)
+                });
+            }
         })
+
+
     }
     async getSong(args){
         return new Promise(function (resolve, reject){
@@ -75,10 +82,15 @@ class ServerInfo {
                 this.Channel.send("Playlist is now empty")
                 this.CurrentSong = null;
             }
-
         });
     }
-
+    conditions(channel,authorID){
+        //console.log(client.guilds.resolve(channel.guild.id).members.resolve(authorID))
+        if(client.guilds.resolve(channel.guild.id).members.resolve(authorID) != null){
+            return true
+        }
+        return false
+    }
 }
 
 function getYoutubeSearch(args){
@@ -123,7 +135,7 @@ function getYTVideoID(url){
 
 function getYTPlaylist(ID){
     return new Promise(async function(resolve){
-        ytpl(ID).then(playlist=>{
+        ytpl(ID,{limit:Infinity}).then(playlist=>{
             let Playlist=[]
             console.log(playlist.items[0])
             for(i=0;i<playlist.items.length;i++){
@@ -132,13 +144,12 @@ function getYTPlaylist(ID){
                 let MusicThumbnail=playlist.items[i].bestThumbnail.url
                 let Music={MusicUrl,MusicTitle,MusicThumbnail}
                 Playlist.push(Music)
-                if(i==99){
+                /*if(i==99){
                     break
-                }
+                }*/
             }
             resolve({Playlist:Playlist,Title:playlist.title})
         })
-
     })
 }
 function getMusic(ID){

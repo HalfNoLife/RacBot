@@ -1,11 +1,13 @@
-module.exports.run =async (client, message, args) => {
-    const play = require ("./play");
-    for (i=0;i<play.length;i++){
-        if (message.guild.id==play[i].key){
-            play[i].value.queue=[]
-            play[i].value.channel.send("Queue destroyed!")
+module.exports.run =async (client, channel,authorID, args) => {
+    return new Promise(function (resolve, reject){
+        const ServerInfos = require ("../ServerInfos").ServerInfos;
+        for (let i=0;i<ServerInfos.length;i++){
+            if (channel.guild.id==ServerInfos[i].ID){
+                ServerInfos[i].PlayList = []
+                resolve("Playlist destroyed")
+            };
         };
-    };
+    })
 };
 module.exports.help = {
     name: 'destroy',

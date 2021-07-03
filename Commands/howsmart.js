@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
 const config = require("../config.json");
 module.exports.run = (client, channel, authorID, args) => {
-    console.log(authorID)
-    console.log(args)
     return new Promise(function (resolve, reject){
         if ( args == null || args.length==0) {
             console.log("args are null")
