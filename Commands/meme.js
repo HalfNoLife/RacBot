@@ -1,9 +1,6 @@
 const randomPuppy = require('random-puppy');
 const Discord = require('discord.js');
-const { Attachment, RichEmbed } = require('discord.js');
-/*
-* TODO NEEDS TO BE FIXED HAS SOMETIMES GETTING A MEME WILL RESULT IN PARSING ERROR
-*/
+
 module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve,reject){
         const SubReddits = ["memes","meirl","historymemes","deepfriedmemes"]
