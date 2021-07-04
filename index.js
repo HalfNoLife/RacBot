@@ -55,6 +55,10 @@ client.on('ready',()=>{
     }
 })
 
+client.on('guildCreate',(guild)=>{
+    new ServerInfo(guild.id)
+})
+
 function removeCommand(id){
     client.api.applications(client.user.id).commands(id).delete()
     console.log("Command removed")

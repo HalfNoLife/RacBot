@@ -1,15 +1,18 @@
 module.exports.run =async (client, channel, authorID, args) => {
     return new Promise(function (resolve,reject){
         console.log(args)
-        str=""
-        for(var i=0;i<args.length;i++){
-            for(var y=0;y<args[i].length;y++){
-                str+=args[i][y]
+        if(args==null){
+            resolve("**Silent noises**")
+        } else {
+            str=""
+            for(var i=0;i<args.length;i++){
+                for(var y=0;y<args[i].length;y++){
+                    str+=args[i][y]
+                }
+                str+=" "
             }
-            str+=" "
+            resolve(str)
         }
-        console.log(str)
-        resolve(str)
     })
 };
 module.exports.help = {

@@ -5,9 +5,9 @@ module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve,reject){
         const SubReddits = ["memes","meirl","historymemes","deepfriedmemes"]
         const Titles = ["Here's your meme !","Hahaha good one!\n(I don't really see what's beneath me)","Roses are red, violets are blue, I send memes"]
-        var SubReddit = SubReddits[Math.floor(Math.random() * (SubReddits.length-1))]
-        var Title = Titles[Math.floor(Math.random() * (Titles.length-1))]
-        var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+        let SubReddit = SubReddits[Math.floor(Math.random() * (SubReddits.length-1))]
+        let Title = Titles[Math.floor(Math.random() * (Titles.length-1))]
+        let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
         console.log("Trying to get meme...")
         randomPuppy(SubReddit)
             .then(url => {
