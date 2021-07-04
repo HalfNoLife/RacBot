@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const fs = require("fs")
 module.exports = async(client, message) => {
     let prefix = ''
+    console.log("new message")
     const ServerInfos = require("../ServerInfos").ServerInfos
     for(let i=0;i<ServerInfos.length;i++){
         if(message.guild.id==ServerInfos[i].ID){

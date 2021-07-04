@@ -39,14 +39,18 @@ class ServerInfo {
                 resolve("I don't have permission to speak or to connect to your voice channel")
             }else {
                 client.guilds.resolve(GuildID).members.resolve(AuthorID).voice.channel.join().then((connection)=>{
+                    connection.on("disconnect",()=>{
+                        disconnect(GuildID)
+                    })
                     resolve(connection)
                 });
             }
         })
-
-
+    }
+    disconnect(){
     }
     async getSong(args){
+        this.Stop+=1;
         return new Promise(function (resolve, reject){
             console.log(args[0])
             if(args[0]==undefined){
@@ -86,9 +90,18 @@ class ServerInfo {
                 } else {
                     this.Channel.send("Playlist is now empty")
                     this.CurrentSong = null;
+                    let start = this.Stop
+                    setTimeout(()=>{
+                        if(start==this.Stop){
+                            if(this.VoiceConnection!=null){
+                                this.VoiceConnection.disconnect()
+                            }
+                            this.Channel.send("I left the channel as I was alone for 5 minutes")
+                        }
+                    },5*60*1000)
+
                 }
             });
-
     }
     /*
     * 0 -> OK
@@ -106,7 +119,17 @@ class ServerInfo {
         return 0
     }
 }
-
+function disconnect(guildID){
+    for(let i=0;i<ServerInfos.length;i++){
+        if(ServerInfos[i].ID==guildID){
+            ServerInfos[i].Channel.send("See you")
+            ServerInfos[i].PlayList = []
+            ServerInfos[i].VoiceConnection = null
+            ServerInfos[i].AudioStream.end()
+            ServerInfos[i].CurrentSong = null
+        }
+    }
+}
 function getYoutubeSearch(args){
     return new Promise(function(resolve, reject) {
         youTube.search (args.join(), 1, {type:"video"}, async function(error, result) {
