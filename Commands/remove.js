@@ -1,18 +1,22 @@
-module.exports.run =async (client, message, args) => {
-const play = require ("./play");
-for (i=0;i<play.length;i++){
-    if(message.guild.id==play[i].key){
-        found = true
-        if(args[0]==undefined||args[0]==1){
-            message.reply(play[i].value.queue[0].MusicTitle+" was succesfully removed from the paylist")
-            play[i].value.queue.splice(0,1)
-        } else if ((Number.isInteger(parseInt(args[0])))&&(parseInt(args[0])>1)&&(parseInt(args[0])<=play[i].value.queue.length)){
-            message.reply(play[i].value.queue[parseInt(args[0])-1].MusicTitle+" was succesfully removed from the paylist")
-            play[i].value.queue.splice(args[0]-1,1)
-        } else {
-            message.channel.send("Please specify a number between 1 and "+(play[i].value.queue.length)+".")
-    }}
-}
+module.exports.run =async (client, channel, authorID, args) => {
+    const ServerInfos = require ("../ServerInfos").ServerInfos;
+    return new Promise(function (resolve, reject){
+        for (let i=0;i<ServerInfos.length;i++){
+            if(channel.guild.id==ServerInfos[i].ID){
+                if(args[0]==undefined||args[0]==1){
+                    resolve(ServerInfos[i].PlayList[0].MusicTitle+" was succesfully removed from the paylist")
+                    ServerInfos[i].PlayList.splice(0,1)
+                } else if ((Number.isInteger(parseInt(args[0])))&&(parseInt(args[0])>1)&&(parseInt(args[0])<=ServerInfos[i].PlayList.length)){
+                    resolve(ServerInfos[i].PlayList[parseInt(args[0])-1].MusicTitle+" was succesfully removed from the paylist")
+                    ServerInfos[i].PlayList.splice(args[0]-1,1)
+                } else if(ServerInfos[i].PlayList.length==0){
+                    resolve("There is no songs in your current playlist")
+                } else {
+                    resolve("Please specify a number between 1 and "+(ServerInfos[i].PlayList.length)+".")
+                }
+            }
+        }
+    })
 };
 module.exports.help = {
     name: 'remove',

@@ -89,12 +89,30 @@ function isPresent(command,commands){
 client.ws.on('INTERACTION_CREATE', async interaction => {
     var args;
     if(interaction.data.options != undefined){
-        args = interaction.data.options[0].value.split(/ +/g);
+        if(typeof(interaction.data.options[0].value)==='number'){
+            args = [interaction.data.options[0].value] //Assuming we only have a single arg
+        } else {
+            args = interaction.data.options[0].value.split(/ +/g);
+        }
     } else {
         args = null;
     }
     const cmd = client.commands.get(interaction.data.name)
-    cmd.run(client,client.channels.resolve(interaction.channel_id),interaction.member.user.id,args).then(async (res)=>{
+    let channel = client.channels.resolve(interaction.channel_id)
+    cmd.run(client,channel,interaction.member.user.id,args).then(async (res)=>{
+        let resArr = []
+        let shift = 1500
+        if(typeof res ==='string' && res.length>1500){
+            resArr.push("")
+            for(let i=0;i<res.length;i++){
+                resArr[resArr.length-1]+=res[i]
+                if(res[i]=='\n' && i>shift){
+                    resArr.push("")
+                    shift+=1500
+                }
+            }
+            res=resArr[0]
+        }
         let data = {
             content:res
         }
@@ -108,6 +126,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data
             }
         })
+        for(let i=1;i<resArr.length;i++){
+            channel.send(resArr[i])
+        }
     })
 })
 

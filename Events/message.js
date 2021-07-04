@@ -19,7 +19,24 @@ module.exports = async(client, message) => {
     if(!cmd) return;
     //console.log(message.author.username)
     cmd.run(client, message.channel, message.author.id , args).then((res)=>{
-        message.channel.send(res)
+        let resArr = [""]
+        let shift = 1500
+        if(typeof res ==='string' && res.length>1500){
+            resArr.push("")
+            for(let i=0;i<res.length;i++){
+                resArr[resArr.length-1]+=res[i]
+                if(res[i]=='\n' && i>shift){
+                    resArr.push("")
+                    shift+=1500
+                }
+            }
+            for(let i=0;i<resArr.length;i++){
+                message.channel.send(resArr[i])
+            }
+        } else {
+            message.channel.send(res)
+        }
+
     });
     addLog(message)
 };
