@@ -17,6 +17,7 @@ class ServerInfo {
     CurrentSong
     AudioStream
     Stop
+    Prefix
     constructor(ServerID) {
         this.ID = ServerID;
         this.Channel = null;
@@ -25,6 +26,7 @@ class ServerInfo {
         this.Stop = 0;
         this.CurrentSong = null
         this.AudioStream = null
+        this.Prefix = '!'
         ServerInfos.push(this)
     }
     join(GuildID,AuthorID,channel){

@@ -1,7 +1,14 @@
 const Discord = require("discord.js");
-const prefix = "!";
 const fs = require("fs")
 module.exports = async(client, message) => {
+    let prefix = ''
+    const ServerInfos = require("../ServerInfos").ServerInfos
+    for(let i=0;i<ServerInfos.length;i++){
+        if(message.guild.id==ServerInfos[i].ID){
+            prefix=ServerInfos[i].Prefix
+            console.log(prefix)
+        }
+    }
     if(!message.content.startsWith(prefix)) return;
     if(message.author.bot) return;
     if(message.channel.type === "dm") return;
