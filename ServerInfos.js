@@ -122,10 +122,11 @@ class ServerInfo {
 function disconnect(guildID){
     for(let i=0;i<ServerInfos.length;i++){
         if(ServerInfos[i].ID==guildID){
-            ServerInfos[i].Channel.send("See you")
             ServerInfos[i].PlayList = []
             ServerInfos[i].VoiceConnection = null
-            ServerInfos[i].AudioStream.end()
+            if(ServerInfos[i].AudioStream!=null && ServerInfos[i].AudioStream!=undefined){
+                ServerInfos[i].AudioStream.end()
+            }
             ServerInfos[i].CurrentSong = null
         }
     }
