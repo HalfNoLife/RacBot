@@ -8,7 +8,7 @@ console.log("Online!")
 const GlobalCommands = []
 const https=require("https")
 module.exports = client
-const ServerInfo = require("./ServerInfos").ServerInfo
+const ServerInfo = require("./ServerInfos")
 fs.readdir("./Commands/",(error, f) =>{
     if(error) console.log(error);
 
@@ -51,12 +51,21 @@ client.on('ready',()=>{
     })
     let servers = client.guilds.cache.array()
     for(let i=0;i<servers.length;i++){
-        new ServerInfo(servers[i].id)
+        new ServerInfo.ServerInfo(servers[i].id)
     }
 })
 
 client.on('guildCreate',(guild)=>{
-    new ServerInfo(guild.id)
+    new ServerInfo.ServerInfo(guild.id)
+})
+
+client.on("guildDelete",(guild)=>{
+    console.log("kicked from:"+guild.name)
+    for(let i=0;i<ServerInfo.ServerInfos.length;i++){
+        if(guild.id==ServerInfo.ServerInfos[i].ID){
+            ServerInfo.ServerInfos.splice(i,1)
+        }
+    }
 })
 
 function removeCommand(id){
