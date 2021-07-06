@@ -3,7 +3,6 @@ const config = require("../config.json");
 module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve, reject){
         if ( args == null || args.length==0) {
-            console.log("args are null")
             resolve("<@"+authorID + "> 's IQ = " + Math.floor(Math.random() * 255))
         }
         else {

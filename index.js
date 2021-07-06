@@ -19,7 +19,6 @@ fs.readdir("./Commands/",(error, f) =>{
         let command = require(`./Commands/${f}`);
         client.commands.set(command.help.name, command);
         GlobalCommands.push({name:command.help.name,description:command.help.description,options:command.help.options})
-        console.log("Command loaded: "+ command.help.name)
     });
 });
 
@@ -35,7 +34,6 @@ fs.readdir("./Events/", (error, f) => {
 });
 
 client.on('ready',()=>{
-    console.log("Client ready, retrieving commands")
     getCommands().then((SlashCommands)=>{
         for(var i=0;i<GlobalCommands.length;i++){
             if(!isPresent(GlobalCommands[i],SlashCommands)){
@@ -47,7 +45,6 @@ client.on('ready',()=>{
                 removeCommand(SlashCommands[i].id)
             }
         }
-        console.log("Commands managed(not updated)")
     })
     let servers = client.guilds.cache.array()
     for(let i=0;i<servers.length;i++){
@@ -60,7 +57,6 @@ client.on('guildCreate',(guild)=>{
 })
 
 client.on("guildDelete",(guild)=>{
-    console.log("kicked from:"+guild.name)
     for(let i=0;i<ServerInfo.ServerInfos.length;i++){
         if(guild.id==ServerInfo.ServerInfos[i].ID){
             ServerInfo.ServerInfos.splice(i,1)
@@ -70,7 +66,6 @@ client.on("guildDelete",(guild)=>{
 
 function removeCommand(id){
     client.api.applications(client.user.id).commands(id).delete()
-    console.log("Command removed")
 }
 
 function postCommand(command){
@@ -79,7 +74,6 @@ function postCommand(command){
             description: command.description,
             options:command.options
         }})
-    console.log("Command: "+command.name+" pushed")
 }
 
 

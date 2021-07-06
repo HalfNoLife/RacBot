@@ -8,7 +8,6 @@ module.exports.run =async (client, channel, authorID, args) => {
                     queueInfos=queueInfos+(q+1)+": "+ServerInfos[i].PlayList[q].MusicTitle+"\n"
                 }
                 if(ServerInfos[i].PlayList.length==0){
-                    console.log("Playlist is empty")
                     queueInfos="There is no song on your server playlist for now\n"
                 }
                 if(ServerInfos[i].Loop){

@@ -4,7 +4,6 @@ module.exports.run = (client, channel, authorID, args) => {
     return new Promise(async function (resolve,reject){
         for(let i=0;i<ServerInfos.length;i++){
             if(ServerInfos[i].ID==channel.guild.id){
-                console.log("Server ID:"+ServerInfos[i].ID)
                 ServerInfos[i].join(ServerInfos[i].ID,authorID,channel).then((res)=>{
                     if(typeof res==='string'){
                         resolve(res)
@@ -22,7 +21,6 @@ module.exports.run = (client, channel, authorID, args) => {
                                 } else {
                                     ServerInfos[i].PlayList.push(res)
                                     for(let x=0;x<ServerInfos[i].PlayList.length;x++){
-                                        console.log(ServerInfos[i].PlayList[x])
                                     }
                                     resolve(res.MusicTitle+" was added to the queue")
                                 }

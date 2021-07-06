@@ -42,7 +42,6 @@ function toURLFormat(args){
     for(i=0;i<subString.length && subString[i]!="&";i++){
         str+=subString[i]
     }
-    console.log(subString)
     return str
 }
 function toWrittenFormat(args){
@@ -51,7 +50,6 @@ function toWrittenFormat(args){
     for(i=0;i<subString.length && subString[i]!="&";i++){
         str+=subString[i]
     }
-    console.log(subString)
     return str
 }
 

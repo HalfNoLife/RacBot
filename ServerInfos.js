@@ -52,7 +52,6 @@ class ServerInfo {
     async getSong(args){
         this.Stop+=1;
         return new Promise(function (resolve, reject){
-            console.log(args[0])
             if(args[0]==undefined){
                 resolve("You need to specify a music to play")
             } else if(args[0].includes("list=")){
@@ -60,7 +59,6 @@ class ServerInfo {
                     resolve(res)
                 })
             } else if(args[0].includes("watch?v=")){
-                console.log("SINGLE VIDEO")
                 getMusic(getYTVideoID(args[0])).then((res)=>{
                     resolve(res)
                 })
@@ -109,7 +107,6 @@ class ServerInfo {
     * 2 -> Authorization issue
     */
     conditions(channel,authorID){
-        console.log(client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel)
         if(client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel == null){
             return 1
         } else if(!client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel.permissionsFor(client.user).has("CONNECT")
@@ -175,7 +172,6 @@ function getYTPlaylist(ID){
     return new Promise(async function(resolve){
         ytpl(ID,{limit:Infinity}).then(playlist=>{
             let Playlist=[]
-            console.log(playlist.items[0])
             for(i=0;i<playlist.items.length;i++){
                 let MusicUrl=playlist.items[i].shortUrl
                 let MusicTitle=playlist.items[i].title.replace("|","")

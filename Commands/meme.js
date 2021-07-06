@@ -8,7 +8,6 @@ module.exports.run = (client, channel, authorID, args) => {
         let SubReddit = SubReddits[Math.floor(Math.random() * (SubReddits.length-1))]
         let Title = Titles[Math.floor(Math.random() * (Titles.length-1))]
         let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-        console.log("Trying to get meme...")
         randomPuppy(SubReddit)
             .then(url => {
                 const meme = new Discord.MessageEmbed()

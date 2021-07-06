@@ -3,7 +3,6 @@ module.exports.run =async (client, channel, authorID, args) => {
     return new Promise(function (resolve, reject){
         for (let i=0;i<ServerInfos.length;i++){
             if (ServerInfos[i].ID==channel.guild.id && ServerInfos[i].AudioStream != null){
-                console.log(ServerInfos[i].AudioStream)
                 ServerInfos[i].AudioStream.resume()
                 resolve("Music resumed")
             };
