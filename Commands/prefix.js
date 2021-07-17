@@ -1,10 +1,15 @@
+const format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 module.exports.run =async (client, channel, authorID, args) => {
     const ServerInfos = require("../ServerInfos").ServerInfos
     return new Promise(function (resolve,reject){
         for (let i=0;i<ServerInfos.length;i++){
             if (channel.guild.id==ServerInfos[i].ID){
-                ServerInfos[i].Prefix = args[0]
-                resolve("new prefix set to "+args[0])
+                if(format.test(args[0])){
+                    ServerInfos[i].Prefix = args[0]
+                    resolve("new prefix set to "+args[0])
+                } else {
+                    resolve("The given prefix contains invalid characters")
+                }
             };
         };
     })
@@ -20,12 +25,6 @@ module.exports.help = {
     }]
 };
 
-function shuffle(arr){
-    for(let i=0;i<arr.length;i++){
-        let j=Math.floor(Math.random() * arr.length);
-        let mem = arr[j]
-        arr[j] = arr[i]
-        arr[i] = mem
-    }
-    return arr
+function testFormat(string){
+    return
 }
