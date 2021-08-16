@@ -30,3 +30,15 @@ Name:HalfNoLife
 id:217359360098041856
 request:!prefix ?
 ----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!prefix ף
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!prefix ף
+----------------------------
+Name:HalfNoLife
+id:217359360098041856
+request:!prefix ף
+----------------------------

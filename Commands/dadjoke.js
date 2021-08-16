@@ -24,7 +24,7 @@ module.exports.run =(client, channel, authorID, args) => {
             res.on("end", function () {
                 const body = Buffer.concat(chunks);
                 let json = JSON.parse(body)
-                setTimeout(() => {  client.channels.cache.get(channelID).send(json.body[0].punchline); }, 5000);
+                setTimeout(() => {  channel.send(json.body[0].punchline); }, 5000);
                 resolve(json.body[0].setup)
             });
         });
