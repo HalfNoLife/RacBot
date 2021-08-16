@@ -16,7 +16,6 @@ module.exports.run = (client, channel, authorID, args) => {
                 meme.setDescription("r/"+SubReddit)
                 meme.setURL(url)
                 meme.setImage(url)
-                console.log(meme)
                 if ((url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".gif"))){
                     resolve(meme)}
                 else {
