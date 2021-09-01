@@ -1,4 +1,3 @@
-# NOT UP TO DATE
 # RacBot
 This is my discord bot, it can play music, send memes, send dad jokes and few other stuffs.
 
