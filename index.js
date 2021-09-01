@@ -6,7 +6,6 @@ client.login(config.token);
 client.commands = new Discord.Collection();
 console.log("Online!")
 const GlobalCommands = []
-const https=require("https")
 module.exports = client
 const ServerInfo = require("./ServerInfos")
 fs.readdir("./Commands/",(error, f) =>{
