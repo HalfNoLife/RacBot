@@ -6,7 +6,7 @@ module.exports.run =async (client, channel, authorID, args) => {
             console.log(Music)
             downloadAudio(Music.MusicUrl).then((FileName)=>{
                 console.log(Music.MusicTitle+" was downloaded")
-                channel.send(FileName+" was downloaded",{
+                channel.send(Music.MusicTitle+" was downloaded",{
                     files:[
                         "./Downloads/"+FileName
                     ]

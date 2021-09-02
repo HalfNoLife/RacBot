@@ -5,6 +5,8 @@ var YouTube = require('youtube-node');
 const config = require("./config.json");
 var youTube = new YouTube();
 youTube.setKey(config.ytapikey);
+const Lame = require("node-lame").Lame;
+
 
 function getYTPlaylistID(url){
     for(let i=0;i<url.length;i++){
@@ -85,7 +87,7 @@ async function downloadAudio(url){
             var FileName;
             stream
                 .on("info", (info) => {
-                FileName = (info.videoDetails.title).replace(/[^a-z0-9]/gi, '_').toLowerCase()+".wav";
+                FileName = (info.videoDetails.title).replace(/[^a-z0-9]/gi, '_')+".wav";
                 stream.pipe(fs.createWriteStream("./Downloads/"+FileName));
 
             })

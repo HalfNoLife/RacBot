@@ -114,3 +114,7 @@ Name:R4tonBaveur
 id:217359360098041856
 request:!download mia vaile american dream
 ----------------------------
+Name:R4tonBaveur
+id:217359360098041856
+request:!echo lol
+----------------------------
