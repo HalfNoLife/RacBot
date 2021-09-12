@@ -14,5 +14,5 @@ made by @TristanGadaud, huge thanks to him
 if you want to use if you will need to have ffmpeg installed, add a config.json file with your own API keys in it and to install packages dependencies with npm install
 
 # About the code
-This is my first nodejs project even tho I have been working on it for a longtime now. If you want to report issues using it you can directly add me on Discord HalfNoLife#2347
+This is my first nodejs project even tho I have been working on it for a longtime now. If you want to report issues using it you can directly add me on Discord R4tonBaveur#3337
 
