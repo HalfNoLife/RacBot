@@ -6,6 +6,7 @@ client.login(config.token);
 client.commands = new Discord.Collection();
 console.log("Online!")
 const GlobalCommands = []
+const https=require("https")
 module.exports = client
 const ServerInfo = require("./ServerInfos")
 fs.readdir("./Commands/",(error, f) =>{
@@ -48,7 +49,6 @@ client.on('ready',()=>{
     let servers = client.guilds.cache.array()
     for(let i=0;i<servers.length;i++){
         new ServerInfo.ServerInfo(servers[i].id)
-        console.log("Server found:" + servers[i].name)
     }
 })
 
@@ -106,55 +106,36 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
     const cmd = client.commands.get(interaction.data.name)
     let channel = client.channels.resolve(interaction.channel_id)
-    let IsBanned = false;
-    getBans().then(bans=>{
-        for(let i = 0;i<bans.length;i++){
-            if(interaction.member.user.id == bans[i]){
-                IsBanned = true
+    cmd.run(client,channel,interaction.member.user.id,args).then(async (res)=>{
+        let resArr = []
+        let shift = 1500
+        if(typeof res ==='string' && res.length>1500){
+            resArr.push("")
+            for(let i=0;i<res.length;i++){
+                resArr[resArr.length-1]+=res[i]
+                if(res[i]=='\n' && i>shift){
+                    resArr.push("")
+                    shift+=1500
+                }
             }
+            res=resArr[0]
         }
-        if(IsBanned){
-            client.api.interactions(interaction.id,interaction.token).callback.post({
-                data:{
-                    type:4,
-                    data:{
-                        content:"<@"+interaction.member.user.id+">, You are banned"
-                    }
-                }
-            })
-            return
+        let data = {
+            content:res
         }
-        cmd.run(client,channel,interaction.member.user.id,args).then(async (res)=>{
-            let resArr = []
-            let shift = 1500
-            if(typeof res ==='string' && res.length>1500){
-                resArr.push("")
-                for(let i=0;i<res.length;i++){
-                    resArr[resArr.length-1]+=res[i]
-                    if(res[i]=='\n' && i>shift){
-                        resArr.push("")
-                        shift+=1500
-                    }
-                }
-                res=resArr[0]
-            }
-            let data = {
-                content:res
-            }
-            //Check for embeds
-            if(typeof res==='object'){
-                data = await createAPImessage(interaction,res)
-            }
-            client.api.interactions(interaction.id,interaction.token).callback.post({
-                data:{
-                    type:4,
-                    data
-                }
-            })
-            for(let i=1;i<resArr.length;i++){
-                channel.send(resArr[i])
+        //Check for embeds
+        if(typeof res==='object'){
+            data = await createAPImessage(interaction,res)
+        }
+        client.api.interactions(interaction.id,interaction.token).callback.post({
+            data:{
+                type:4,
+                data
             }
         })
+        for(let i=1;i<resArr.length;i++){
+            channel.send(resArr[i])
+        }
     })
 })
 
@@ -168,10 +149,3 @@ async function createAPImessage(interaction, content){
     return{...data,files}
 }
 
-function getBans(){
-    return new Promise(async function(resolve){
-        fs.readFile("./bans.txt",function (err,res){
-            resolve(res.toString().split(/\r?\n/))
-        })
-    })
-}

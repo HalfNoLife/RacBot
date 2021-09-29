@@ -27,10 +27,6 @@ module.exports.run =(client, channel, authorID, args) => {
                 setTimeout(() => {  channel.send(json.body[0].punchline); }, 5000);
                 resolve(json.body[0].setup)
             });
-            res.on("error",function (error){
-                console.log(error)
-                resolve("an error as occurred :(")
-            })
         });
         req.end();
     })
