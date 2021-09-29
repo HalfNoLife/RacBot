@@ -5,8 +5,6 @@ var YouTube = require('youtube-node');
 const config = require("./config.json");
 var youTube = new YouTube();
 youTube.setKey(config.ytapikey);
-const Lame = require("node-lame").Lame;
-
 
 function getYTPlaylistID(url){
     for(let i=0;i<url.length;i++){
