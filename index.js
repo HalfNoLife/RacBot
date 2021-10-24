@@ -106,6 +106,21 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }
     const cmd = client.commands.get(interaction.data.name)
     let channel = client.channels.resolve(interaction.channel_id)
+    let bans = await getBans()
+    for(let i=0;i<bans.length;bans++){
+        if(bans[i]==interaction.member.user.id){
+            //channel.send("<@"+interaction.member.user.id+">, You are banned");
+            client.api.interactions(interaction.id,interaction.token).callback.post({
+                data:{
+                    type:4,
+                    data:{
+                        content: "<@"+interaction.member.user.id+">, You are banned"
+                    }
+                }
+            })
+            return
+        }
+    }
     cmd.run(client,channel,interaction.member.user.id,args).then(async (res)=>{
         let resArr = []
         let shift = 1500
@@ -148,4 +163,10 @@ async function createAPImessage(interaction, content){
         .resolveFiles()
     return{...data,files}
 }
-
+function getBans(){
+    return new Promise(async function(resolve){
+        fs.readFile("./bans.txt",function (err,res){
+            resolve(res.toString().split(/\r?\n/))
+        })
+    })
+}

@@ -12,7 +12,8 @@ module.exports = async(client, message) => {
     if(message.author.bot) return;
     if(message.channel.type === "dm") return;
     let bans = await getBans()
-    for(i = 0;i<bans.length;i++){
+    for(let i = 0;i<bans.length;i++){
+        console.log(bans[i]);
         if(message.author.id == bans[i]){
             message.reply("You are banned")
             return
