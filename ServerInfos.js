@@ -39,15 +39,10 @@ class ServerInfo {
                 resolve("I don't have permission to speak or to connect to your voice channel")
             }else {
                 client.guilds.resolve(GuildID).members.resolve(AuthorID).voice.channel.join().then((connection)=>{
-                    connection.on("disconnect",()=>{
-                        disconnect(GuildID)
-                    })
                     resolve(connection)
                 });
             }
         })
-    }
-    disconnect(){
     }
     async getSong(args){
         this.Stop+=1;
@@ -76,6 +71,7 @@ class ServerInfo {
         embed.setURL(this.CurrentSong.MusicUrl);
         embed.setImage(this.CurrentSong.MusicThumbnail);
         this.Channel.send(embed);
+        console.log(this.VoiceConnection.channel.members.array().length)
         this.AudioStream = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly",highWaterMark:1024*128,quality:"140"}))
             .on("finish",()=>{
                 if (this.Loop){
@@ -84,7 +80,15 @@ class ServerInfo {
                 this.PlayList.shift();
                 if(this.PlayList.length>0){
                     this.CurrentSong = this.PlayList[0]
-                    this.player();
+                    if(this.VoiceConnection.channel.members.array().length>1){
+                        this.player();
+                    } else {
+                        this.PlayList = [];
+                        this.Loop = false;
+                        this.VoiceConnection.disconnect()
+                        this.CurrentSong = null;
+                        this.Channel.send("I left the channel and reset the queue as I was alone")
+                    }
                 } else {
                     this.Channel.send("Playlist is now empty")
                     this.CurrentSong = null;
