@@ -70,8 +70,7 @@ class ServerInfo {
         embed.setTitle("Now playing : \n"+this.CurrentSong.MusicTitle);
         embed.setURL(this.CurrentSong.MusicUrl);
         embed.setImage(this.CurrentSong.MusicThumbnail);
-        this.Channel.send(embed);
-        console.log(this.VoiceConnection.channel.members.array().length)
+        this.Channel.send(embed)
         this.AudioStream = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly",highWaterMark:1024*128,quality:"140"}))
             .on("finish",()=>{
                 if (this.Loop){
@@ -103,6 +102,13 @@ class ServerInfo {
                     },5*60*1000)
 
                 }
+            })
+            .on('error', e => {
+                this.Channel.send("An error occurred while playing sorry: "+e.message);
+                console.error(e.message);
+            })
+            .on('start', () => {
+                console.log('Play started');
             });
     }
     /*
@@ -139,7 +145,9 @@ function getYoutubeSearch(args){
                 console.log(error);
                 if(error.code==403){
                     resolve("Sorry request quota exceeded :(, You will have to wait until tomorrow for the quota to reset");
-                } else {
+                } else if(error.code == 410){
+                    resolve("Sorry for some reasons this request wont work")
+                }else{
                     resolve("Sorry their an unexpected error has occurred when searching on Youtube :(");
                 }
             }else if (result.pageInfo.totalResults == 0){
