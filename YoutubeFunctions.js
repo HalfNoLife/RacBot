@@ -32,9 +32,6 @@ function getYTPlaylist(ID){
                 let MusicThumbnail=playlist.items[i].bestThumbnail.url
                 let Music={MusicUrl,MusicTitle,MusicThumbnail}
                 Playlist.push(Music)
-                /*if(i==99){
-                    break
-                }*/
             }
             resolve({Playlist:Playlist,Title:playlist.title})
         })
@@ -50,9 +47,13 @@ function getYTVideo(ID){
                     let Music={MusicUrl,MusicTitle,MusicThumbnail}
                     resolve(Music)
                 }
-            )
-            .catch(()=>{
-                resolve("Sorry I can't find this video :(")
+            ).catch((error)=>{
+                console.log(error)
+                if(error.statusCode == 410){
+                        resolve("Sorry the video you searched for seems to be community flagged.")
+                } else {
+                    resolve("Sorry I can't find this video :(")
+                }
             })
     })
 }
@@ -72,9 +73,17 @@ function getVideoSearch(args){
                 let MusicUrl="https://www.youtube.com/watch?v="+ result.items[0].id.videoId;
                 let MusicTitle=JSON.stringify(result.items[0].snippet.title).replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,"&");
                 MusicTitle = removeByIndex(removeByIndex(MusicTitle,MusicTitle.length-1),0);
-                let MusicThumbnail=((await ytdl.getBasicInfo(MusicUrl)).videoDetails.thumbnails[3].url);
-                let Music={MusicUrl,MusicTitle,MusicThumbnail};
-                resolve(Music);
+                //let MusicThumbnail=((await ytdl.getBasicInfo(MusicUrl)).videoDetails.thumbnails[3].url);
+                ytdl.getBasicInfo(MusicUrl).then((details)=>{
+                    let MusicThumbnail = details.videoDetails.thumbnails[3].url
+                    let Music={MusicUrl,MusicTitle,MusicThumbnail};
+                    resolve(Music);
+                }).catch((error)=>{
+                    console.log(error)
+                    if(error.statusCode == 410){
+                        resolve("Sorry the video you searched for seems to be community flagged.")
+                    }
+                })
             };
         })});
 };
