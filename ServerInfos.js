@@ -103,7 +103,10 @@ class ServerInfo {
                     this.Channel.send("Sorry this video is community flagged, I can't play it. Automatically skipping it")
                     this.CurrentSong = null
                     this.PlayList.shift()
-                } else {
+                } else if(e.statusCode == 403){
+                    this.Channel.send("An error as occurred, trying to play the song again")
+                    this.player()
+                }else{
                     this.Channel.send("Sorry an error occurred while playing a song. Automatically skipping it");
                     console.error(e.message);
                 }
