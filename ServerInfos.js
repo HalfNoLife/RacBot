@@ -104,7 +104,11 @@ class ServerInfo {
                     this.CurrentSong = null
                     this.PlayList.shift()
                 } else if(e.statusCode == 403){
-                    this.Channel.send("An error as occurred, trying to play the song again")
+                    this.Channel.send("An error as occurred:"+e.message)
+                    this.Channel.send("Skipping the current song...")
+                    console.log(this.CurrentSong)
+                    this.CurrentSong = null
+                    this.PlayList.shift()
                     this.player()
                 }else{
                     this.Channel.send("Sorry an error occurred while playing a song. Automatically skipping it");
