@@ -99,26 +99,17 @@ class ServerInfo {
                 }
             })
             .on('error', e => {
-                if(e.statusCode == 410){
-                    this.Channel.send("Sorry this video is community flagged, I can't play it. Automatically skipping it")
-                    console.log(this.CurrentSong)
-                    this.CurrentSong = null
-                    this.PlayList.shift()
+                console.log("Error on:"+this.CurrentSong.MusicUrl)
+                console.log(e)
+                this.PlayList.shift()
+                this.Channel.send("An error as occurred while playing:"+this.CurrentSong.MusicTitle+". Automatically skipping it." )
+                this.CurrentSong = null
+                if(this.PlayList.length>0){
                     this.player()
-                } else if(e.statusCode == 403){
-                    this.Channel.send("An error as occurred:"+e.message)
-                    this.Channel.send("Skipping the current song...")
-                    console.log(this.CurrentSong)
-                    this.CurrentSong = null
-                    this.PlayList.shift()
-                    this.player()
-                }else{
-                    this.Channel.send("Sorry an error occurred while playing a song. Automatically skipping it");
-                    console.error(e.message);
                 }
             })
             .on('start', () => {
-                console.log('Play started');
+                console.log('Play started on'+this.CurrentSong);
             });
     }
     /*
