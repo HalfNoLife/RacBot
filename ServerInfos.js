@@ -61,6 +61,7 @@ class ServerInfo {
         })
     }
     player(){
+        this.CurrentSong = this.PlayList[0]
         const embed = new Discord.MessageEmbed();
         embed.setColor('#ff0000');
         embed.setTitle("Now playing : \n"+this.CurrentSong.MusicTitle);
@@ -74,7 +75,6 @@ class ServerInfo {
                 }
                 this.PlayList.shift();
                 if(this.PlayList.length>0){
-                    this.CurrentSong = this.PlayList[0]
                     if(this.VoiceConnection.channel.members.array().length>1){
                         this.player();
                     } else {
@@ -101,8 +101,10 @@ class ServerInfo {
             .on('error', e => {
                 if(e.statusCode == 410){
                     this.Channel.send("Sorry this video is community flagged, I can't play it. Automatically skipping it")
+                    console.log(this.CurrentSong)
                     this.CurrentSong = null
                     this.PlayList.shift()
+                    this.player()
                 } else if(e.statusCode == 403){
                     this.Channel.send("An error as occurred:"+e.message)
                     this.Channel.send("Skipping the current song...")
