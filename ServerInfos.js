@@ -4,6 +4,7 @@ const ytdl = require("ytdl-core");
 const Discord = require('discord.js');
 const ytFunctions = require("./YoutubeFunctions")
 
+
 class ServerInfo {
     ID
     Channel
@@ -109,7 +110,7 @@ class ServerInfo {
                 }
             })
             .on('start', () => {
-                console.log('Play started on'+this.CurrentSong);
+                console.log('Play started on: '+this.CurrentSong.MusicTitle);
             });
     }
     /*

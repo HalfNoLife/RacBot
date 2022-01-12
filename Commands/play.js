@@ -1,5 +1,5 @@
 const ServerInfos = require("../ServerInfos").ServerInfos
-const ytdl = require("ytdl-core")
+
 module.exports.run = (client, channel, authorID, args) => {
     return new Promise(async function (resolve,reject){
         for(let i=0;i<ServerInfos.length;i++){
