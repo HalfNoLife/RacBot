@@ -3,6 +3,7 @@ const ServerInfos = []
 const ytdl = require("ytdl-core");
 const Discord = require('discord.js');
 const ytFunctions = require("./YoutubeFunctions")
+const {Channel} = require("discord.js");
 
 
 class ServerInfo {
@@ -111,7 +112,13 @@ class ServerInfo {
             })
             .on('start', () => {
                 console.log('Play started on: '+this.CurrentSong.MusicTitle);
-            });
+            })
+            this.VoiceConnection.on('disconnect' ,()=>{
+                this.AudioStream.end()
+                this.CurrentSong = null
+                this.PlayList = []
+                this.Channel.send("Goodbye")
+            })
     }
     /*
     * 0 -> OK
