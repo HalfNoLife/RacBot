@@ -63,6 +63,7 @@ class ServerInfo {
         })
     }
     player(){
+        let finished = false
         this.CurrentSong = this.PlayList[0]
         const embed = new Discord.MessageEmbed();
         embed.setColor('#ff0000');
@@ -72,6 +73,7 @@ class ServerInfo {
         this.Channel.send(embed)
         this.AudioStream = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly",highWaterMark:1024*128,quality:"140"}))
             .on("finish",()=>{
+                finished = true
                 if (this.Loop){
                     this.PlayList.push(this.PlayList[0]);
                 }
@@ -114,10 +116,12 @@ class ServerInfo {
                 console.log('Play started on: '+this.CurrentSong.MusicTitle);
             })
             this.VoiceConnection.on('disconnect' ,()=>{
-                this.AudioStream.end()
-                this.CurrentSong = null
-                this.PlayList = []
-                this.Channel.send("Goodbye")
+                if(!finished){
+                    this.AudioStream.end()
+                    this.CurrentSong = null
+                    this.PlayList = []
+                    this.Channel.send("Goodbye")
+                }
             })
     }
     /*
