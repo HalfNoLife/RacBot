@@ -1,8 +1,5 @@
 module.exports = async(client) => {
-    client.user.setPresence({
-        activity: {
-            name: "type !help",
-            type: "LISTENING"
-        }
-    })
+    setInterval(()=>{
+        client.user.setActivity(`Present in ${client.guilds.cache.size} servers`)
+    },60*1000);
 };
