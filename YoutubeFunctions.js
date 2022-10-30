@@ -1,9 +1,10 @@
 const ytpl= require("ytpl");
 const ytdl = require("ytdl-core")
 const fs = require("fs")
-var YouTube = require('youtube-node');
+const YouTube = require('youtube-node');
 const config = require("./config.json");
-var youTube = new YouTube();
+
+const youTube = new YouTube();
 youTube.setKey(config.ytapikey);
 
 function getYTPlaylistID(url){
@@ -13,6 +14,7 @@ function getYTPlaylistID(url){
         }
     }
 }
+
 function getYTVideoID(url){
     for(let i=0;i<url.length;i++){
         if(url.substr(i,8)=="watch?v="){
@@ -37,6 +39,8 @@ function getYTPlaylist(ID){
         })
     })
 }
+
+
 function getYTVideo(ID){
     return new Promise (async function(resolve){
         let MusicUrl="https://www.youtube.com/watch?v="+ID
@@ -57,6 +61,8 @@ function getYTVideo(ID){
             })
     })
 }
+
+
 function getVideoSearch(args){
     return new Promise((resolve, reject) => {
         youTube.search (args.join(), 1, {type:"video"}, async (error, result) => {
