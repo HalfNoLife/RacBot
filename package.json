@@ -7,7 +7,6 @@
     "https": "^1.0.0",
     "opus": "*",
     "opusscript": "^0.0.8",
-    "random-puppy": "^1.1.0",
     "youtube-node": "^1.3.3",
     "ytdl": "^1.4.1",
     "ytdl-core": "^4.11.2",
