@@ -50,7 +50,7 @@ function getYTVideo(ID){
             ).catch((error)=>{
                 console.log(error)
                 if(error.statusCode == 410){
-                        resolve("Sorry the video you searched for seems to be community flagged.")
+                    resolve("Sorry the video you searched for seems to be community flagged.")
                 } else {
                     resolve("Sorry I can't find this video :(")
                 }
@@ -58,8 +58,8 @@ function getYTVideo(ID){
     })
 }
 function getVideoSearch(args){
-    return new Promise(function(resolve, reject) {
-        youTube.search (args.join(), 1, {type:"video"}, async function(error, result) {
+    return new Promise((resolve, reject) => {
+        youTube.search (args.join(), 1, {type:"video"}, async (error, result) => {
             if (error) {
                 console.log(error);
                 if(error.code==403){
@@ -73,13 +73,11 @@ function getVideoSearch(args){
                 let MusicUrl="https://www.youtube.com/watch?v="+ result.items[0].id.videoId;
                 let MusicTitle=JSON.stringify(result.items[0].snippet.title).replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,"&");
                 MusicTitle = removeByIndex(removeByIndex(MusicTitle,MusicTitle.length-1),0);
-                //let MusicThumbnail=((await ytdl.getBasicInfo(MusicUrl)).videoDetails.thumbnails[3].url);
                 ytdl.getBasicInfo(MusicUrl).then((details)=>{
                     let MusicThumbnail = details.videoDetails.thumbnails[3].url
                     let Music={MusicUrl,MusicTitle,MusicThumbnail};
                     resolve(Music);
                 }).catch((error)=>{
-                    console.log(error)
                     if(error.statusCode == 410){
                         resolve("Sorry the video you searched for seems to be community flagged.")
                     }

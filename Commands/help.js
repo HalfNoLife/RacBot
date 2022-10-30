@@ -1,6 +1,7 @@
 module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve, reject){
-        const message = ":musical_note: MUSIC:\n" +
+        const message = 
+            ":musical_note: MUSIC:\n" +
             "   play + <key-words>/<Youtube-playlist-url>/<Youtube-video-url> --- plays the music you searched for/adds it to the queue\n" +
             "   pause & resume --- pauses/resumes the current music in the queue\n" +
             "   skip --- skips the current music in the playlist \n" +

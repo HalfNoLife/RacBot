@@ -65,7 +65,7 @@ class ServerInfo {
     player(){
         let finished = false
         this.CurrentSong = this.PlayList[0]
-        const embed = new Discord.MessageEmbed();
+        let embed = new Discord.MessageEmbed();
         embed.setColor('#ff0000');
         embed.setTitle("Now playing : \n"+this.CurrentSong.MusicTitle);
         embed.setURL(this.CurrentSong.MusicUrl);

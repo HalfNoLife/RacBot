@@ -1,5 +1,5 @@
-const randomPuppy = require('random-puppy');
 const Discord = require('discord.js');
+const https = require('https');
 
 module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve,reject){
@@ -8,21 +8,27 @@ module.exports.run = (client, channel, authorID, args) => {
         let SubReddit = SubReddits[Math.floor(Math.random() * (SubReddits.length-1))]
         let Title = Titles[Math.floor(Math.random() * (Titles.length-1))]
         let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-        randomPuppy(SubReddit)
-            .then(url => {
-                const meme = new Discord.MessageEmbed()
-                meme.setColor(randomColor)
-                meme.setTitle(Title)
-                meme.setDescription("r/"+SubReddit)
-                meme.setURL(url)
-                meme.setImage(url)
-                if ((url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".gif"))){
-                    resolve(meme)}
-                else {
-                    resolve(Title+"\n"+ url+"\nr/"+SubReddit)}
+        https.get("https://www.reddit.com/r/"+SubReddit+"/hot.json",(res)=>{
+            let body = ""
+            res.on('data',(chunk)=>{
+                body+=chunk
             })
+            res.on('end', ()=>{
+                let json = JSON.parse(body);
+                let meme = json.data.children[Math.floor(Math.random() * (json.data.children.length - 1))].data;
+                let embed = new Discord.MessageEmbed();
+                embed.setColor(meme.link_flair_background_color);
+                embed.setTitle(Title);
+                embed.setDescription("r/"+SubReddit);
+                embed.setURL("https://www.reddit.com"+meme.permalink);
+                embed.setImage(meme.url);
+                resolve(embed);
+            })
+        })
     })
 }
+
+
 module.exports.help = {
     name: 'meme',
     description:'sends a meme',

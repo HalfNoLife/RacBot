@@ -15,14 +15,13 @@ module.exports.run =(client, channel, authorID, args) => {
             }
         };
         const req = http.request(options, function (res) {
-            const chunks = [];
+            let body = "";
 
-            res.on("data", function (chunk) {
-                chunks.push(chunk);
+            res.on("data", (chunk) => {
+                body+=chunk;
             });
 
-            res.on("end", function () {
-                const body = Buffer.concat(chunks);
+            res.on("end", () => {
                 let json = JSON.parse(body)
                 setTimeout(() => {  channel.send(json.body[0].punchline); }, 5000);
                 resolve(json.body[0].setup)
