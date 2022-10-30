@@ -2,8 +2,6 @@ const client = require("./index")
 const ServerInfos = []
 const ytdl = require("ytdl-core");
 const Discord = require('discord.js');
-const ytFunctions = require("./YoutubeFunctions")
-const {Channel} = require("discord.js");
 
 
 class ServerInfo {
@@ -42,26 +40,7 @@ class ServerInfo {
             }
         })
     }
-    async getSong(args){
-        this.Stop+=1;
-        return new Promise(function (resolve, reject){
-            if(args[0]==undefined){
-                resolve("You need to specify a music to play")
-            } else if(args[0].includes("list=")){
-                ytFunctions.getYTPlaylist(ytFunctions.getYTPlaylistID(args[0])).then((res)=>{
-                    resolve(res)
-                })
-            } else if(args[0].includes("watch?v=")){
-                ytFunctions.getYTVideo(ytFunctions.getYTVideoID(args[0])).then((res)=>{
-                    resolve(res)
-                })
-            } else {
-                ytFunctions.getVideoSearch(args).then((res)=>{
-                    resolve(res)
-                })
-            }
-        })
-    }
+    
     player(){
         let finished = false
         this.CurrentSong = this.PlayList[0]

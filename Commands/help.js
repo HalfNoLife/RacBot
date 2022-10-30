@@ -2,7 +2,7 @@ module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve, reject){
         const message = 
             ":musical_note: MUSIC:\n" +
-            "   play + <key-words>/<Youtube-playlist-url>/<Youtube-video-url> --- plays the music you searched for/adds it to the queue\n" +
+            "   play + <key-words> --- plays the music or playlist you searched for/adds it to the queue\n" +
             "   pause & resume --- pauses/resumes the current music in the queue\n" +
             "   skip --- skips the current music in the playlist \n" +
             "   destroy --- destroys the current music queue\n" +
@@ -16,7 +16,7 @@ module.exports.run = (client, channel, authorID, args) => {
             "   relationship --- asks you if you want to mary another random user\n" +
             "   dadjoke --- Sends a dadjoke \n" +
             ":wrench: TOOLS:\n" +
-            "   download  <key-words>/<Youtube-video-url> --- downloads the music and sends it to the channel\n" +
+            "   download  <key-words> --- downloads the music and sends it to the channel\n" +
             "   weather +<city-name> --- Gives you the weather for the specified city \n" +
             ":question: OTHER:\n" +
             "   help --- gives you the different commands syntax\n" +

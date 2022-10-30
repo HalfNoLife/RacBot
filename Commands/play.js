@@ -1,4 +1,5 @@
 const ServerInfos = require("../ServerInfos").ServerInfos
+const YoutubeFunctions = require("../YoutubeFunctions")
 
 module.exports.run = (client, channel, authorID, args) => {
     return new Promise(async function (resolve,reject){
@@ -9,25 +10,19 @@ module.exports.run = (client, channel, authorID, args) => {
                         resolve(res)
                     } else {
                         ServerInfos[i].VoiceConnection = res
-                        ServerInfos[i].getSong(args).then((res)=>{
+                        YoutubeFunctions.getVideoSearch(args).then((res)=>{
                             if(typeof (res)==='string'){
                                 resolve(res)
                             } else {
-                                if(res.Playlist!=undefined){
-                                    for(let pos=0;pos<res.Playlist.length;pos++){
-                                        ServerInfos[i].PlayList.push(res.Playlist[pos])
-                                    }
-                                    resolve("Playlist: "+res.Title+" was added to the queue")
-                                } else {
-                                    ServerInfos[i].PlayList.push(res)
-                                    for(let x=0;x<ServerInfos[i].PlayList.length;x++){
-                                    }
-                                    resolve(res.MusicTitle+" was added to the queue")
+                                resolve(res.Title + " was added to the queue.");
+                                for(let m = 0; m < res.Musics.length; m++){
+                                    ServerInfos[i].PlayList.push(res.Musics[m]);
                                 }
                                 if(ServerInfos[i].CurrentSong==null){
                                     ServerInfos[i].CurrentSong = ServerInfos[i].PlayList[0]
                                     ServerInfos[i].player()
-                                }}
+                                }
+                            }
                         })
                     }
                 })

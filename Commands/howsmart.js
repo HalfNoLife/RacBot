@@ -3,7 +3,7 @@ const config = require("../config.json");
 module.exports.run = (client, channel, authorID, args) => {
     return new Promise(function (resolve, reject){
         if ( args == null || args.length==0) {
-            resolve("<@"+authorID + "> 's IQ = " + Math.floor(Math.random() * 255))
+            resolve("<@"+authorID + "> 's IQ = " + Math.floor(Math.random() * 150))
         }
         else {
             var str = ""
@@ -13,7 +13,7 @@ module.exports.run = (client, channel, authorID, args) => {
                 }
                 str+=" "
             }
-            resolve(str+ "'s IQ is " + Math.floor(Math.random() * 255));
+            resolve(str+ "'s IQ is " + Math.floor(Math.random() * 150));
         }
     })
 }
