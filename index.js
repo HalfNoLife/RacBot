@@ -97,7 +97,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     var args;
     if(interaction.data.options != undefined){
         if(typeof(interaction.data.options[0].value)==='number'){
-            args = [interaction.data.options[0].value] //Assuming we only have a single arg
+            args = [interaction.data.options[0].value]
         } else {
             args = interaction.data.options[0].value.split(/ +/g);
         }

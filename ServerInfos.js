@@ -1,4 +1,5 @@
 const client = require("./index")
+const config = require("./config.json")
 const ServerInfos = []
 const ytdl = require("ytdl-core");
 const Discord = require('discord.js');
@@ -50,7 +51,12 @@ class ServerInfo {
         embed.setURL(this.CurrentSong.MusicUrl);
         embed.setImage(this.CurrentSong.MusicThumbnail);
         this.Channel.send(embed)
-        this.AudioStream = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl,{filter:"audioonly",highWaterMark:1024*128,quality:"140"}))
+        this.AudioStream = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl+"&bpctr=9999999999&has_verified=1",{filter:"audioonly",highWaterMark:1024*128,quality:"140",
+        requestOptions:{
+            headers:{
+                Cookie:config.ytcookie
+            }
+        }}))
             .on("finish",()=>{
                 finished = true
                 if (this.Loop){
