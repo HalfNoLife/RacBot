@@ -8,10 +8,10 @@ module.exports.run =async (client, channel, authorID, args) => {
                 downloadAudio(Result.Musics[0].MusicUrl).then((FileName)=>{
                     channel.send(Result.Musics[0].MusicTitle+" was downloaded",{
                         files:[
-                            "./Downloads/"+FileName
+                            FileName
                         ]
                     }).then(()=>{
-                        fs.unlinkSync("./Downloads/"+FileName)
+                        fs.unlinkSync(FileName)
                     })
                 })
             } else {

@@ -2,7 +2,9 @@ const ytpl= require("ytpl");
 const ytdl = require("ytdl-core")
 const ytsr = require('ytsr');
 const fs = require("fs")
-
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
+const ffmpeg = require('fluent-ffmpeg')
+ffmpeg.setFfmpegPath(ffmpegPath)
 const config = require("./config.json");
 
 
@@ -37,14 +39,28 @@ function getVideoSearch(args)
     })
 }
 
+function convertWavToMp3(wavFilename){
+    return new Promise((resolve, reject) => {
+        const outputFile = wavFilename.replace(".wav", ".mp3");
+        ffmpeg({
+            source: wavFilename,
+        }).on("error", (err) => {
+            reject(err);
+        }).on("end", () => {
+            fs.unlinkSync(wavFilename);
+            resolve(outputFile);
+        }).save(outputFile);
+    });
+}
+
 async function downloadAudio(url){
     return new Promise(function (resolve,reject){
-        var stream =ytdl(url,{filter:"audioonly"})
-        var FileName;
+        var stream =ytdl(url,{filter:"audioonly",requestOptions:{headers:{Cookie:config.ytcookie}}})
+        var FileName = "./Downloads/";
         stream
         .on("info", (info) => {
-            FileName = (info.videoDetails.title).replace(/[^a-z0-9]/gi, '_')+".wav";
-            stream.pipe(fs.createWriteStream("./Downloads/"+FileName));
+            FileName += (info.videoDetails.title).replace(/[^a-z0-9]/gi, '_')+".wav";
+            stream.pipe(fs.createWriteStream(FileName));
         })
         .on("error",(error)=>{
             if(error.statusCode==403){
@@ -54,7 +70,7 @@ async function downloadAudio(url){
             }
         })
         .on("end",()=>{
-                resolve(FileName)
+                resolve(convertWavToMp3(FileName))
         })
     })
 }
