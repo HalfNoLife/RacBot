@@ -13,14 +13,12 @@ class ServerInfo {
     Loop
     CurrentSong
     AudioStream
-    Stop
     Prefix
     constructor(ServerID) {
         this.ID = ServerID;
         this.Channel = null;
         this.PlayList = [];
         this.Loop = false;
-        this.Stop = 0;
         this.CurrentSong = null
         this.AudioStream = null
         this.Prefix = '!'
@@ -76,15 +74,7 @@ class ServerInfo {
                 } else {
                     this.Channel.send("Playlist is now empty")
                     this.CurrentSong = null;
-                    let start = this.Stop
-                    setTimeout(()=>{
-                        if(start==this.Stop){
-                            if(this.VoiceConnection!=null){
-                                this.VoiceConnection.disconnect()
-                            }
-                            this.Channel.send("I left the channel as I was alone for 5 minutes")
-                        }
-                    },5*60*1000)
+                    this.VoiceConnection.disconnect()
                 }
             })
             .on('error', e => {
