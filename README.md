@@ -12,4 +12,4 @@ This is my first nodejs project even tho I have been working on it for a longtim
 
 # Other
 [Support Server](https://discord.gg/5QKbasW4Ps)
-[Website](https://tristangadaud.github.io/racbotweb/) (made by [@TristanGadaud](https://github.com/TristanGadaud)): 
+[Website](https://r4tonbaveur.github.io/racbotweb/) (made by [@TristanGadaud](https://github.com/TristanGadaud)): 
