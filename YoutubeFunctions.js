@@ -19,7 +19,8 @@ function getVideoSearch(args)
             let MusicUrl = search_result.items[0].url;
             let MusicTitle = search_result.items[0].title;
             let MusicThumbnail = search_result.items[0].bestThumbnail.url;
-            let Music={MusicUrl,MusicTitle,MusicThumbnail};
+            let MusicIsLive = search_result.items[0].badges[0] == "LIVE";
+            let Music={MusicUrl,MusicTitle,MusicThumbnail,MusicIsLive};
             Musics.push(Music);
             let Result = {Title, Musics};
             resolve(Result)
@@ -29,7 +30,8 @@ function getVideoSearch(args)
                     let MusicUrl=playlist.items[i].shortUrl;
                     let MusicTitle=playlist.items[i].title;
                     let MusicThumbnail=playlist.items[i].bestThumbnail.url;
-                    let Music={MusicUrl,MusicTitle,MusicThumbnail};
+                    let MusicIsLive = false;
+                    let Music={MusicUrl,MusicTitle,MusicThumbnail,MusicIsLive};
                     Musics.push(Music);
                 }
                 let Result = {Title, Musics};

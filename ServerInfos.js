@@ -32,7 +32,7 @@ class ServerInfo {
                 resolve("You need to be in a voice channel")
             } else if(conditions==2){
                 resolve("I don't have permission to speak or to connect to your voice channel")
-            }else {
+            } else {
                 client.guilds.resolve(GuildID).members.resolve(AuthorID).voice.channel.join().then((connection)=>{
                     resolve(connection)
                 });
@@ -49,12 +49,16 @@ class ServerInfo {
         embed.setURL(this.CurrentSong.MusicUrl);
         embed.setImage(this.CurrentSong.MusicThumbnail);
         this.Channel.send(embed)
-        this.AudioStream = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl+"&bpctr=9999999999&has_verified=1",{filter:"audioonly",highWaterMark:1<<25,maxReconnect:5,quality:"140",
-        requestOptions:{
-            headers:{
-                Cookie:config.ytcookie
+        this.AudioStream = this.VoiceConnection.play(ytdl(this.CurrentSong.MusicUrl+"&bpctr=9999999999&has_verified=1",
+        {
+            filter:this.CurrentSong.MusicIsLive ? null : "audioonly", highWaterMark:1<<25,maxReconnect:5,quality:this.CurrentSong.MusicIsLive ? "91" : "140",
+            requestOptions:{
+                headers:{
+                    Cookie:config.ytcookie
+                }
             }
-        }}))
+        }
+        ))
             .on("finish",()=>{
                 finished = true
                 if (this.Loop){
