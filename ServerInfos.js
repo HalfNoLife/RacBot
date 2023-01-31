@@ -4,7 +4,6 @@ const ServerInfos = []
 const ytdl = require("ytdl-core");
 const Discord = require('discord.js');
 
-
 class ServerInfo {
     ID
     Channel
@@ -54,7 +53,8 @@ class ServerInfo {
             filter:this.CurrentSong.MusicIsLive ? null : "audioonly", highWaterMark:1<<25,maxReconnect:5,quality:this.CurrentSong.MusicIsLive ? "91" : "140",
             requestOptions:{
                 headers:{
-                    Cookie:config.ytcookie
+                    "Cookie":config.ytcookie,
+                    "X-Youtube-Identity-Token": config.ytidtoken,
                 }
             }
         }
