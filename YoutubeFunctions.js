@@ -7,7 +7,17 @@ const ffmpeg = require('fluent-ffmpeg')
 ffmpeg.setFfmpegPath(ffmpegPath)
 const config = require("./config.json");
 
-
+function isLive(search_result)
+{
+    for(let i=0; i<search_result.badges.length; i++)
+    {
+        if (search_result.badges[i] == "LIVE" || search_result.badges[i] == "PREMIERE")
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 function getVideoSearch(args)
 {
@@ -27,7 +37,7 @@ function getVideoSearch(args)
             let MusicUrl = search_result.items[0].url;
             let MusicTitle = search_result.items[0].title;
             let MusicThumbnail = search_result.items[0].bestThumbnail.url;
-            let MusicIsLive = search_result.items[0].badges[0] == "LIVE";
+            let MusicIsLive = isLive(search_result.items[0]);
             let Music={MusicUrl,MusicTitle,MusicThumbnail,MusicIsLive};
             Musics.push(Music);
             let Result = {Title, Musics};
@@ -46,7 +56,7 @@ function getVideoSearch(args)
                     let MusicUrl=playlist.items[i].shortUrl;
                     let MusicTitle=playlist.items[i].title;
                     let MusicThumbnail=playlist.items[i].bestThumbnail.url;
-                    let MusicIsLive = false;
+                    let MusicIsLive = isLive(playlist.items[i]);
                     let Music={MusicUrl,MusicTitle,MusicThumbnail,MusicIsLive};
                     Musics.push(Music);
                 }
