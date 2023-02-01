@@ -5,6 +5,7 @@ return new Promise(function (resolve, reject){
         if (channel.guild.id == ServerInfos[i].ID) {
             if (ServerInfos[i].CurrentSong != null) {
                 resolve(ServerInfos[i].CurrentSong.MusicTitle + " was succesfully skipped.")
+                ServerInfos[i].AudioStream.resume()
                 ServerInfos[i].AudioStream.end()
             } else {
                 resolve("Sorry but their is no songs to skip for now on this server.")
