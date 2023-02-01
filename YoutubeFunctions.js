@@ -12,7 +12,15 @@ const config = require("./config.json");
 function getVideoSearch(args)
 {
     return new Promise(async (resolve,reject)=>{
-        const search_result = await ytsr(args.join(" "),{limit:1});
+        const search_result = await ytsr(args.join(" "),{
+            limit:1,
+            requestOptions:{
+                headers:{
+                    'cookie':config.ytcookie,
+                    'x-youtube-identity-token':config.ytidtoken,
+                }
+            }
+        });
         let Title = search_result.items[0].title;
         let Musics = [];
         if(search_result.items[0].type == "video"){
@@ -25,7 +33,15 @@ function getVideoSearch(args)
             let Result = {Title, Musics};
             resolve(Result)
         } else {
-            ytpl(search_result.items[0].playlistID,{limit:Infinity}).then(playlist=>{
+            ytpl(search_result.items[0].playlistID,{
+                limit:Infinity,
+                requestOptions:{
+                    headers:{
+                        'cookie':config.ytcookie,
+                        'x-youtube-identity-token':config.ytidtoken,
+                    }
+                }
+            }).then(playlist=>{
                 for(let i=0;i<playlist.items.length;i++){
                     let MusicUrl=playlist.items[i].shortUrl;
                     let MusicTitle=playlist.items[i].title;

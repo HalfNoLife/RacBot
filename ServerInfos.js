@@ -53,8 +53,8 @@ class ServerInfo {
             filter:this.CurrentSong.MusicIsLive ? null : "audioonly", highWaterMark:1<<25,maxReconnect:5,quality:this.CurrentSong.MusicIsLive ? "91" : "140",
             requestOptions:{
                 headers:{
-                    "Cookie":config.ytcookie,
-                    "X-Youtube-Identity-Token": config.ytidtoken,
+                    'cookie':config.ytcookie,
+                    'x-youtube-identity-token':config.ytidtoken,
                 }
             }
         }
@@ -92,7 +92,7 @@ class ServerInfo {
                 }
             })
             .on('start', () => {
-                console.log('Play started on: '+this.CurrentSong.MusicTitle);
+                //console.log('Play started on: '+this.CurrentSong.MusicTitle);
             })
             this.VoiceConnection.on('disconnect' ,()=>{
                 if(!finished){
