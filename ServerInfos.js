@@ -27,9 +27,9 @@ class ServerInfo {
         this.Channel = channel;
         let conditions = this.conditions(channel,AuthorID)
         return new Promise(function (resolve, reject){
-            if(conditions==1){
+            if(conditions == 1){
                 resolve("You need to be in a voice channel")
-            } else if(conditions==2){
+            } else if(conditions == 2){
                 resolve("I don't have permission to speak or to connect to your voice channel")
             } else {
                 client.guilds.resolve(GuildID).members.resolve(AuthorID).voice.channel.join().then((connection)=>{
@@ -109,7 +109,8 @@ class ServerInfo {
     * 2 -> Authorization issue
     */
     conditions(channel,authorID){
-        if(client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel == null){
+        if(client.guilds.resolve(channel.guild.id).members.resolve(authorID) == null
+        || client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel == null){
             return 1
         } else if(!client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel.permissionsFor(client.user).has("CONNECT")
             ||!client.guilds.resolve(channel.guild.id).members.resolve(authorID).voice.channel.permissionsFor(client.user).has("SPEAK")){

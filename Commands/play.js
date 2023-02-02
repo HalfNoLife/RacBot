@@ -6,7 +6,7 @@ module.exports.run = (client, channel, authorID, args) => {
         for(let i=0;i<ServerInfos.length;i++){
             if(ServerInfos[i].ID==channel.guild.id){
                 ServerInfos[i].join(ServerInfos[i].ID,authorID,channel).then((res)=>{
-                    if(typeof res==='string'){
+                    if(typeof res ==='string'){
                         resolve(res)
                     } else {
                         ServerInfos[i].VoiceConnection = res
