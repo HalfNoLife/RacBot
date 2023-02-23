@@ -56,7 +56,7 @@ function getVideoSearch(args)
                     let MusicUrl=playlist.items[i].shortUrl;
                     let MusicTitle=playlist.items[i].title;
                     let MusicThumbnail=playlist.items[i].bestThumbnail.url;
-                    let MusicIsLive = isLive(playlist.items[i]);
+                    let MusicIsLive = false;
                     let Music={MusicUrl,MusicTitle,MusicThumbnail,MusicIsLive};
                     Musics.push(Music);
                 }
