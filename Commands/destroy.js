@@ -4,7 +4,6 @@ module.exports.run =async (client, channel,authorID, args) => {
         for (let i=0;i<ServerInfos.length;i++){
             if (channel.guild.id==ServerInfos[i].ID){
                 ServerInfos[i].PlayList = []
-                ServerInfos[i].CurrentSong = null;
                 resolve("Playlist destroyed")
             };
         };
