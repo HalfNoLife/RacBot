@@ -3,17 +3,16 @@ const youtubeFunctions = require("../youtubeFunctions")
 const status = require("../status")
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, VoiceConnectionStatus } = require('@discordjs/voice');
 const ytdl = require("ytdl-core");
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder,PermissionsBitField  } = require("discord.js");
 
 const config = require("../config.json")
 
 function testPlayConditions(interaction) {
-    console.log(interaction.member.voice.channel)
     if(interaction.member.voice.channel == null)
         return status.notInVoiceChannel;
-    else if(!interaction.member.voice.channel.permissionsFor(interaction.client.user).has("CONNECT"))
+    else if(!interaction.member.voice.channel.permissionsFor(interaction.client.user).has(PermissionsBitField.Flags.Connect))
         return status.connectPermissionError;
-    else if(!interaction.member.voice.channel.permissionsFor(interaction.client.user).has("SPEAK"))
+    else if(!interaction.member.voice.channel.permissionsFor(interaction.client.user).has(PermissionsBitField.Flags.Speak))
         return status.speakPermissionError;
     else
         return status.ok;
@@ -44,7 +43,6 @@ async function player(serverInfo)
     })
     serverInfo.audioStream
     .on('idle',()=>{
-        console.log("music ended")
         if(serverInfo.isLooping)
             serverInfo.playlist.push(serverInfo.playlist[0])
         serverInfo.playlist.shift()
@@ -90,7 +88,6 @@ module.exports.run = (interaction) => {
             });
             serverInfo.voiceConnection.subscribe(serverInfo.audioStream)
         }
-        console.log(serverInfo.audioStream.state.status)
         serverInfo.textChannel = interaction.channel
         if(serverInfo.audioStream.state.status === 'idle' || serverInfo.audioStream.state.status === 'autopaused')
             player(serverInfo)
