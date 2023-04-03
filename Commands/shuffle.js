@@ -1,12 +1,15 @@
-module.exports.run =async (client, channel, authorID, args) => {
-    const ServerInfos = require("../ServerInfos").ServerInfos
+const serverInfos = require("../serverInfos").ServerInfos
+module.exports.run =async (interaction) => {
     return new Promise(function (resolve,reject){
-        for (let i=0;i<ServerInfos.length;i++){
-            if (channel.guild.id==ServerInfos[i].ID){
-                shuffle(ServerInfos[i].PlayList)
-                resolve("shuffled")
-            };
-        };
+        let serverInfo = serverInfos.find((elm)=>elm.guildId == interaction.guildId)
+        if(serverInfo.playlist.length>0)
+        {
+            shuffle(serverInfo.playlist)
+            resolve("Playlist shuffled!")
+        }
+        else
+            resolve("There is no songs to shuffle in your playlist!")
+        
     })
 };
 module.exports.help = {

@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
-module.exports.run = (client, channel, authorID,interaction=null) => {
-    return new Promise(function (resolve, reject){
-        resolve("pong")
+module.exports.run = (interaction) => {
+    return new Promise(resolve =>{
+        resolve("Pong!")
     })
 };
 

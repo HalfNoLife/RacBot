@@ -1,21 +1,23 @@
-const {getVideoSearch,downloadAudio} = require("../YoutubeFunctions")
+const {getVideoSearch,downloadAudio} = require("../youtubeFunctions")
 const fs = require("fs")
-module.exports.run =async (client, channel, authorID, args) => {
-    return new Promise(function (resolve,reject){
-        getVideoSearch(args).then((Result)=>{
-            if (Result.Musics.length == 1) {
+const status = require("../status")
+module.exports.run =async (interaction) => {
+    return new Promise(function (resolve){
+        getVideoSearch(interaction.options.get("song").value).then((result)=>{
+            if (result.musics.length == 1) {
                 resolve("Trying to download your song please wait...")
-                downloadAudio(Result.Musics[0].MusicUrl).then((FileName)=>{
-                    channel.send(Result.Musics[0].MusicTitle+" was downloaded",{
+                downloadAudio(result.musics[0].musicUrl).then((fileName)=>{
+                    interaction.channel.send({
+                        content:result.musics[0].musicTitle+" was downloaded",
                         files:[
-                            FileName
+                            fileName
                         ]
                     }).then(()=>{
-                        fs.unlinkSync(FileName)
+                        fs.unlinkSync(fileName)
                     })
                 })
             } else {
-                resolve("Sorry, the bot does not support playlist downloading for now");
+                resolve(status.playlistDownloadError);
             }
         })
     })

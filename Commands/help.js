@@ -1,4 +1,4 @@
-module.exports.run = (client, channel, authorID, args) => {
+module.exports.run = (interaction) => {
     return new Promise(function (resolve, reject){
         const message = 
             ":musical_note: MUSIC:\n" +

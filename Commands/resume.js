@@ -1,12 +1,9 @@
-module.exports.run =async (client, channel, authorID, args) => {
-    const ServerInfos = require("../ServerInfos").ServerInfos
+const serverInfos = require("../serverInfos").ServerInfos
+module.exports.run =async (interaction) => {
     return new Promise(function (resolve, reject){
-        for (let i=0;i<ServerInfos.length;i++){
-            if (ServerInfos[i].ID==channel.guild.id && ServerInfos[i].AudioStream != null){
-                ServerInfos[i].AudioStream.resume()
-                resolve("Music resumed")
-            };
-        };
+        let serverInfo = serverInfos.find((elm)=>elm.guildId == interaction.guildId)
+        serverInfo.audioStream.unpause();
+        resolve("Music unpaused")
     })
 };
 module.exports.help = {

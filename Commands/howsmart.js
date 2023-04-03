@@ -1,19 +1,12 @@
 const Discord = require('discord.js');
 const config = require("../config.json");
-module.exports.run = (client, channel, authorID, args) => {
+module.exports.run = (interaction) => {
     return new Promise(function (resolve, reject){
-        if ( args == null || args.length==0) {
-            resolve("<@"+authorID + "> 's IQ = " + Math.floor(Math.random() * 150))
+        if ( interaction.options.get("someone") == null) {
+            resolve("<@"+interaction.member.id + "> 's IQ = " + Math.floor(Math.random() * 150))
         }
         else {
-            var str = ""
-            for(var i=0;i<args.length;i++){
-                for(var y=0;y<args[i].length;y++){
-                    str+=args[i][y]
-                }
-                str+=" "
-            }
-            resolve(str+ "'s IQ is " + Math.floor(Math.random() * 150));
+            resolve(interaction.options.get("someone").value+ "'s IQ is " + Math.floor(Math.random() * 150));
         }
     })
 }

@@ -22,7 +22,7 @@ function isLive(search_result)
 function getVideoSearch(args)
 {
     return new Promise(async (resolve,reject)=>{
-        const search_result = await ytsr(args.join(" "),{
+        const search_result = await ytsr(args,{
             limit:1,
             requestOptions:{
                 headers:{
@@ -31,17 +31,16 @@ function getVideoSearch(args)
                 }
             }
         });
-        let Title = search_result.items[0].title;
-        let Musics = [];
+        let title = search_result.items[0].title;
+        let musics = [];
         if(search_result.items[0].type == "video"){
-            let MusicUrl = search_result.items[0].url;
-            let MusicTitle = search_result.items[0].title;
-            let MusicThumbnail = search_result.items[0].bestThumbnail.url;
-            let MusicIsLive = isLive(search_result.items[0]);
-            let Music={MusicUrl,MusicTitle,MusicThumbnail,MusicIsLive};
-            Musics.push(Music);
-            let Result = {Title, Musics};
-            resolve(Result)
+            let musicUrl = search_result.items[0].url;
+            let musicTitle = search_result.items[0].title;
+            let musicThumbnail = search_result.items[0].bestThumbnail.url;
+            let musicIsLive = isLive(search_result.items[0]);
+            let music={musicUrl,musicTitle,musicThumbnail,musicIsLive};
+            musics.push(music);
+            resolve({title, musics})
         } else {
             ytpl(search_result.items[0].playlistID,{
                 limit:Infinity,
@@ -53,15 +52,14 @@ function getVideoSearch(args)
                 }
             }).then(playlist=>{
                 for(let i=0;i<playlist.items.length;i++){
-                    let MusicUrl=playlist.items[i].shortUrl;
-                    let MusicTitle=playlist.items[i].title;
-                    let MusicThumbnail=playlist.items[i].bestThumbnail.url;
-                    let MusicIsLive = false;
-                    let Music={MusicUrl,MusicTitle,MusicThumbnail,MusicIsLive};
-                    Musics.push(Music);
+                    let musicUrl=playlist.items[i].shortUrl;
+                    let musicTitle=playlist.items[i].title;
+                    let musicThumbnail=playlist.items[i].bestThumbnail.url;
+                    let musicIsLive = false;
+                    let music={musicUrl,musicTitle,musicThumbnail,musicIsLive};
+                    musics.push(music);
                 }
-                let Result = {Title, Musics};
-                resolve(Result)
+                resolve({title, musics})
             })
         }
     })

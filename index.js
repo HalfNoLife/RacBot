@@ -1,5 +1,12 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const { Client, Events, GatewayIntentBits } = require('discord.js');
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates
+  ]
+});
+const Discord = require("discord.js")
 const config = require("./config.json")
 const fs=require('fs');
 client.login(config.token);
@@ -8,7 +15,7 @@ console.log("Online!")
 const GlobalCommands = []
 const https=require("https")
 module.exports = client
-const ServerInfo = require("./ServerInfos")
+const ServerInfo = require("./serverInfos")
 fs.readdir("./Commands/",(error, f) =>{
     if(error) console.log(error);
 
@@ -33,22 +40,56 @@ fs.readdir("./Events/", (error, f) => {
     });
 });
 
+function removeCommand(id){
+    client.application.commands.delete(id)
+}
+
+function postCommand(command){
+    client.application.commands.create(client.user.id).commands.post({data:{
+            name: command.name,
+            description: command.description,
+            options:command.options
+        }})
+}
+
+
+async function getCommands(){
+    return new Promise(async function (resolve,reject){
+        resolve(await client.application.commands.fetch())
+    })
+}
+
+function isPresentOnBot(name,commands){
+    for(var command of commands){
+        if(command[1].name == name){
+            return true
+        }
+    }
+    return false
+}
+
+function getBans(){
+    return new Promise(async function(resolve){
+        fs.readFile("./bans.txt",function (err,res){
+            resolve(res.toString().split(/\r?\n/))
+        })
+    })
+}
 client.on('ready',()=>{
     getCommands().then((SlashCommands)=>{
         for(var i=0;i<GlobalCommands.length;i++){
-            if(!isPresent(GlobalCommands[i],SlashCommands)){
+            if(!isPresentOnBot(GlobalCommands[i].name,SlashCommands)){
                 postCommand(GlobalCommands[i])
             }
         }
         for(var i=0;i<SlashCommands.length;i++){
-            if(!isPresent(SlashCommands[i],GlobalCommands)){
+            if(!isPresent(SlashCommands[i].name,GlobalCommands)){
                 removeCommand(SlashCommands[i].id)
             }
         }
     })
-    let servers = client.guilds.cache.array()
-    for(let i=0;i<servers.length;i++){
-        new ServerInfo.ServerInfo(servers[i].id)
+    for(var guild of client.guilds.cache.entries()){
+        new ServerInfo.ServerInfo(guild[0])
     }
 })
 
@@ -64,109 +105,17 @@ client.on("guildDelete",(guild)=>{
     }
 })
 
-function removeCommand(id){
-    client.api.applications(client.user.id).commands(id).delete()
-}
-
-function postCommand(command){
-    client.api.applications(client.user.id).commands.post({data:{
-            name: command.name,
-            description: command.description,
-            options:command.options
-        }})
-}
-
-
-async function getCommands(){
-    return new Promise(async function (resolve,reject){
-        const res = await client.api.applications(client.user.id).commands.get()
-        resolve(res)
-    })
-}
-
-function isPresent(command,commands){
-    for(var i=0;i<commands.length;i++){
-        if(commands[i].name==command.name){
-            return true
-        }
-    }
-    return false
-}
-
-client.ws.on('INTERACTION_CREATE', async interaction => {
-    var args;
-    if(interaction.data.options != undefined){
-        if(typeof(interaction.data.options[0].value)==='number'){
-            args = [interaction.data.options[0].value]
-        } else {
-            args = interaction.data.options[0].value.split(/ +/g);
-        }
-    } else {
-        args = null;
-    }
-    const cmd = client.commands.get(interaction.data.name)
-    let channel = client.channels.resolve(interaction.channel_id)
-    let bans = await getBans()
-    for(let i=0;i<bans.length;bans++){
-        if(bans[i]==interaction.member.user.id){
-            //channel.send("<@"+interaction.member.user.id+">, You are banned");
-            client.api.interactions(interaction.id,interaction.token).callback.post({
-                data:{
-                    type:4,
-                    data:{
-                        content: "<@"+interaction.member.user.id+">, You are banned"
-                    }
-                }
+client.on(Events.InteractionCreate, async interaction => {
+    await interaction.deferReply();
+    cmd = require(`./Commands/${interaction.commandName}`)
+    cmd.run(interaction).then(async reply => {
+        if(typeof reply === 'string')
+            interaction.editReply(reply)
+        else
+        {
+            interaction.editReply({
+                embeds: [reply]
             })
-            return
-        }
-    }
-    cmd.run(client,channel,interaction.member.user.id,args).then(async (res)=>{
-        let resArr = []
-        let shift = 1500
-        if(typeof res ==='string' && res.length>1500){
-            resArr.push("")
-            for(let i=0;i<res.length;i++){
-                resArr[resArr.length-1]+=res[i]
-                if(res[i]=='\n' && i>shift){
-                    resArr.push("")
-                    shift+=1500
-                }
-            }
-            res=resArr[0]
-        }
-        let data = {
-            content:res
-        }
-        //Check for embeds
-        if(typeof res==='object'){
-            data = await createAPImessage(interaction,res)
-        }
-        client.api.interactions(interaction.id,interaction.token).callback.post({
-            data:{
-                type:4,
-                data
-            }
-        })
-        for(let i=1;i<resArr.length;i++){
-            channel.send(resArr[i])
         }
     })
 })
-
-async function createAPImessage(interaction, content){
-    const {data,files} = await Discord.APIMessage.create(
-        client.channels.resolve(interaction.channel_id),
-        content
-    )
-        .resolveData()
-        .resolveFiles()
-    return{...data,files}
-}
-function getBans(){
-    return new Promise(async function(resolve){
-        fs.readFile("./bans.txt",function (err,res){
-            resolve(res.toString().split(/\r?\n/))
-        })
-    })
-}

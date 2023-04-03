@@ -1,14 +1,13 @@
-const Discord = require('discord.js');
+const {EmbedBuilder}  = require('discord.js');
 const https = require('https');
 
-module.exports.run = (client, channel, authorID, args) => {
-    return new Promise(function (resolve,reject){
-        const SubReddits = ["memes","meirl","historymemes","deepfriedmemes"]
-        const Titles = ["Here's your meme !","Hahaha good one!\n(I don't really see what's beneath me)","Roses are red, violets are blue, I send memes"]
-        let SubReddit = SubReddits[Math.floor(Math.random() * (SubReddits.length-1))]
-        let Title = Titles[Math.floor(Math.random() * (Titles.length-1))]
-        let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-        https.get("https://www.reddit.com/r/"+SubReddit+"/hot.json",(res)=>{
+module.exports.run = (interaction) => {
+    return new Promise(function (resolve){
+        const subReddits = ["memes","meirl","historymemes","deepfriedmemes"]
+        const titles = ["Here's your meme !","Hahaha good one!\n(I don't really see what's beneath me)","Roses are red, violets are blue, I send memes"]
+        let subReddit = subReddits[Math.floor(Math.random() * (subReddits.length-1))]
+        let title = titles[Math.floor(Math.random() * (titles.length-1))]
+        https.get("https://www.reddit.com/r/"+subReddit+"/hot.json",(res)=>{
             let body = ""
             res.on('data',(chunk)=>{
                 body+=chunk
@@ -16,12 +15,12 @@ module.exports.run = (client, channel, authorID, args) => {
             res.on('end', ()=>{
                 let json = JSON.parse(body);
                 let meme = json.data.children[Math.floor(Math.random() * (json.data.children.length - 1))].data;
-                let embed = new Discord.MessageEmbed();
-                embed.setColor(meme.link_flair_background_color);
-                embed.setTitle(Title);
-                embed.setDescription("r/"+SubReddit);
-                embed.setURL("https://www.reddit.com"+meme.permalink);
-                embed.setImage(meme.url);
+                let embed = new EmbedBuilder()
+                    .setColor('#FF5700')
+                    .setTitle(title)
+                    .setDescription("r/"+subReddit)
+                    .setURL("https://www.reddit.com"+meme.permalink)
+                    .setImage(meme.url)
                 resolve(embed);
             })
         })

@@ -1,12 +1,12 @@
 const Discord = require('discord.js');
 
-module.exports.run = (client, channel, authorID, args) => {
+module.exports.run = (interaction) => {
     return new Promise(function (resolve,reject){
-        let user2 = channel.guild.members.cache.random();
+        let user2 = interaction.guild.members.cache.random();
         while (user2.user.bot){
-            user2 = channel.guild.members.cache.random();
+            user2 = interaction.guild.members.cache.random();
         }
-        resolve("<@" + authorID + ">"+", will you mary "+ "<@" + user2.id + ">"+ "?");
+        resolve("<@" + interaction.member.id + ">"+", will you mary "+ "<@" + user2.id + ">"+ "?");
     })
 };
 

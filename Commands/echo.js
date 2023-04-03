@@ -1,18 +1,9 @@
-module.exports.run =async (client, channel, authorID, args) => {
+module.exports.run =async (interaction) => {
     return new Promise(function (resolve,reject){
-        console.log(args)
-        if(args==null){
-            resolve("**Silent noises**")
-        } else {
-            str=""
-            for(var i=0;i<args.length;i++){
-                for(var y=0;y<args[i].length;y++){
-                    str+=args[i][y]
-                }
-                str+=" "
-            }
-            resolve(str)
-        }
+        if(interaction.options.get("message") == null)
+            resolve("**Silent Noises**")
+        else
+            resolve(interaction.options.get("message").value)
     })
 };
 module.exports.help = {

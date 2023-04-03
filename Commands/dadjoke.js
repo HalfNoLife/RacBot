@@ -1,8 +1,8 @@
 const http = require("https")
 const config = require("../config.json")
 var message = "";
-module.exports.run =(client, channel, authorID, args) => {
-    return new Promise(function (resolve, reject){
+module.exports.run = (interaction) => {
+    return new Promise(function (resolve){
         const options = {
             "method": "GET",
             "hostname": "dad-jokes.p.rapidapi.com",
@@ -23,7 +23,7 @@ module.exports.run =(client, channel, authorID, args) => {
 
             res.on("end", () => {
                 let json = JSON.parse(body)
-                setTimeout(() => {  channel.send(json.body[0].punchline); }, 5000);
+                setTimeout(() => { interaction.channel.send(json.body[0].punchline); }, 5000);
                 resolve(json.body[0].setup)
             });
         });

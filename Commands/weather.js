@@ -1,16 +1,12 @@
 const https = require("https")
 const config = require("../config.json")
-module.exports.run =async (client, channel, authorID, args) => {
-    return new Promise((resolve, reject)=>{
-        if(toURLFormat(args)==""){
-            channel.send("You need to specify a place you want weather previsions for")
-        } else {
-            resolve(getContent("https://api.openweathermap.org/data/2.5/weather?q="+toURLFormat(args)+"&appid="+config.weatherAPIkey,channel,toWrittenFormat(args)))
-        }
+module.exports.run =async (interaction) => {
+    return new Promise((resolve)=>{
+        resolve(getContent("https://api.openweathermap.org/data/2.5/weather?q="+toURLFormat(interaction.options.get("town").value)+"&appid="+config.weatherAPIkey,interaction.options.get("town").value))
     })
 
 };
-function getContent(url,channel,cityName){
+function getContent(url,cityName){
     return new Promise(((resolve, reject) => {
         https.get(url,(res) => {
             let body = "";
@@ -40,8 +36,8 @@ function getContent(url,channel,cityName){
 
 }
 
-function toURLFormat(args){
-    subString = args.join("%20")
+function toURLFormat(town){
+    subString = town.replace(/\s+/g, '%20');
     str = ""
     for(i=0;i<subString.length && subString[i]!="&";i++){
         str+=subString[i]
