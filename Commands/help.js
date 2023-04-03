@@ -21,10 +21,7 @@ module.exports.run = (interaction) => {
             ":question: OTHER:\n" +
             "   help --- gives you the different commands syntax\n" +
             "   ping --- pings the bot\n" +
-            "   leave --- disconnects me from your voice channel\n" +
-            "   join --- makes me join your voice channel\n" +
-            "   echo <text> --- resends the specified text \n" +
-            "   prefix <character or small text> --- sets a custom prefix for your server";
+            "   echo <text> --- resends the specified text \n";
         resolve(message)
     })
 };

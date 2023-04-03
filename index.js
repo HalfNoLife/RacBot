@@ -110,7 +110,14 @@ client.on(Events.InteractionCreate, async interaction => {
     cmd = require(`./Commands/${interaction.commandName}`)
     cmd.run(interaction).then(async reply => {
         if(typeof reply === 'string')
-            interaction.editReply(reply)
+        {
+            substrings = []
+            for (let i = 0; i < reply.length; i += 2000)
+                substrings.push(reply.substr(i, 2000));
+            interaction.editReply(substrings[0])
+            for(let i = 1;i < substrings.length;i++)
+                interaction.channel.send(substrings[i])
+        }
         else
         {
             interaction.editReply({
