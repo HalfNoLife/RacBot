@@ -1,6 +1,5 @@
 const http = require("https")
 const config = require("../config.json")
-var message = "";
 module.exports.run = (interaction) => {
     return new Promise(function (resolve){
         const options = {
