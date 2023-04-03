@@ -67,24 +67,29 @@ function isPresentOnBot(name,commands){
     }
     return false
 }
-
-function getBans(){
-    return new Promise(async function(resolve){
-        fs.readFile("./bans.txt",function (err,res){
-            resolve(res.toString().split(/\r?\n/))
-        })
-    })
+function isPresentOnDiscord(name,commands){
+    for(let i = 0; i<commands.length; i++)
+    {
+        if(commands[i].name == name)
+        {
+            return true
+        }
+    }
+    return false
 }
+
 client.on('ready',()=>{
-    getCommands().then((SlashCommands)=>{
+    getCommands().then((slashCommands)=>{
         for(var i=0;i<GlobalCommands.length;i++){
-            if(!isPresentOnBot(GlobalCommands[i].name,SlashCommands)){
+            if(!isPresentOnBot(GlobalCommands[i].name,slashCommands)){
+                console.log("Posting command: " + GlobalCommands[i].name)
                 postCommand(GlobalCommands[i])
             }
         }
-        for(var i=0;i<SlashCommands.length;i++){
-            if(!isPresent(SlashCommands[i].name,GlobalCommands)){
-                removeCommand(SlashCommands[i].id)
+        for(var slashCommand of slashCommands){
+            if(!isPresentOnDiscord(slashCommand[1].name,GlobalCommands)){
+                console.log("Removing command: " + slashCommand[1].name)
+                removeCommand(slashCommand[1].id)
             }
         }
     })
