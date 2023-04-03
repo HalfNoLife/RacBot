@@ -88,6 +88,7 @@ module.exports.run = (interaction) => {
             })
             .on('error', e => {
                 console.log(e)
+                interaction.channel.send("An error occured while playing: "+ serverInfo.playlist[0].musicTitle)
             })
             .on('playing',()=>{
                 let embed = new EmbedBuilder()
