@@ -18,7 +18,7 @@ function testPlayConditions(interaction) {
         return status.ok;
 }
 
-async function player(serverInfo)
+async function playSong(serverInfo)
 {
     serverInfo.audioStream.play(createAudioResource(ytdl(serverInfo.playlist[0].musicUrl+"&bpctr=9999999999&has_verified=1",
     {
@@ -33,30 +33,15 @@ async function player(serverInfo)
             }
         }
     })))
-    let embed = new EmbedBuilder()
-        .setColor("Red")
-        .setTitle("Now playing : \n"+serverInfo.playlist[0].musicTitle)
-        .setURL(serverInfo.playlist[0].musicUrl)
-        .setImage(serverInfo.playlist[0].musicThumbnail)
-    serverInfo.textChannel.send({
-        embeds:[embed]
-    })
-    serverInfo.audioStream
-    .on('idle',()=>{
-        if(serverInfo.isLooping)
-            serverInfo.playlist.push(serverInfo.playlist[0])
-        serverInfo.playlist.shift()
-        if(serverInfo.playlist.length>0)
-            player(serverInfo)
-    })
-    .on('error', e => {
-        console.log(e)
-    })
 }
 
 module.exports.run = (interaction) => {
     return new Promise(async function (resolve,reject){
+
+        // Getting the server
         let serverInfo = serverInfos.find((elm)=>elm.guildId == interaction.guildId)
+
+        // Connecting to the channel
         if(serverInfo.voiceConnection == null || serverInfo.voiceConnection.state.status === 'disconnected')
         {
             let playConditionsStatus = testPlayConditions(interaction);
@@ -73,24 +58,53 @@ module.exports.run = (interaction) => {
                     if(serverInfo.audioStream != null)
                         serverInfo.audioStream.stop()
                     interaction.channel.send("Goodbye!")
+                    serverInfo.voiceConnection.removeAllListeners()
                 })
             }
         }
+
+        // Adding the musics
         let result = await youtubeFunctions.getVideoSearch(interaction.options.get("music").value)
         for(let i = 0;i<result.musics.length;i++)
             serverInfo.playlist.push(result.musics[i])
+        
+        // Intentiating audiostream
         if(serverInfo.audioStream == null)
         {
             serverInfo.audioStream = createAudioPlayer({
                 behaviors: {
-                    noSubscriber: NoSubscriberBehavior.Pause,
+                    noSubscriber: NoSubscriberBehavior.Stop,
                 },
             });
-            serverInfo.voiceConnection.subscribe(serverInfo.audioStream)
+            serverInfo.audioStream
+            .on('idle',()=>{
+                if(serverInfo.isLooping)
+                    serverInfo.playlist.push(serverInfo.playlist[0])
+                serverInfo.playlist.shift()
+                if(serverInfo.playlist.length>0)
+                    playSong(serverInfo)
+                else
+                    serverInfo.voiceConnection.disconnect();
+            })
+            .on('error', e => {
+                console.log(e)
+            })
+            .on('playing',()=>{
+                let embed = new EmbedBuilder()
+                    .setColor("Red")
+                    .setTitle("Now playing : \n"+serverInfo.playlist[0].musicTitle)
+                    .setURL(serverInfo.playlist[0].musicUrl)
+                    .setImage(serverInfo.playlist[0].musicThumbnail)
+                interaction.channel.send({embeds:[embed]})
+            })
         }
-        serverInfo.textChannel = interaction.channel
+
+        // Subscribing the audioStream
+        serverInfo.voiceConnection.subscribe(serverInfo.audioStream)
+
+        // Starting the player if needed
         if(serverInfo.audioStream.state.status === 'idle' || serverInfo.audioStream.state.status === 'autopaused')
-            player(serverInfo)
+            playSong(serverInfo)
         resolve(result.title + " was successfully added to the playlist.")
     })
 };
