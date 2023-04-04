@@ -19,8 +19,8 @@ module.exports.help = {
 };
 
 function shuffle(arr){
-    for(let i=0;i<arr.length;i++){
-        let j=Math.floor(Math.random() * arr.length);
+    for(let i=1;i<arr.length;i++){
+        let j=Math.floor(Math.random() * arr.length-1)+1;
         let mem = arr[j]
         arr[j] = arr[i]
         arr[i] = mem
