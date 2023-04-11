@@ -3,10 +3,13 @@ const https = require('https');
 
 module.exports.run = (interaction) => {
     return new Promise(function (resolve){
-        const subReddits = ["memes","meirl","historymemes","deepfriedmemes"]
-        const titles = ["Here's your meme !","Hahaha good one!\n(I don't really see what's beneath me)","Roses are red, violets are blue, I send memes"]
-        let subReddit = subReddits[Math.floor(Math.random() * (subReddits.length-1))]
-        let title = titles[Math.floor(Math.random() * (titles.length-1))]
+        const subReddits = ["memes","meirl","historymemes"]
+        const titles = ["Here's your meme !",
+        "Hahaha good one!\n(I don't really see what's beneath me)",
+        "Roses are red, violets are blue, I send memes"]
+        let subReddit = subReddits[Math.floor(Math.random() * (subReddits.length))]
+        let title = titles[Math.floor(Math.random() * (titles.length))]
+        console.log(title+" "+subReddit)
         https.get("https://www.reddit.com/r/"+subReddit+"/hot.json",(res)=>{
             let body = ""
             res.on('data',(chunk)=>{
