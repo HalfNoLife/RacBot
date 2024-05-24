@@ -28,8 +28,8 @@ async function playSong(serverInfo)
         quality:serverInfo.playlist[0].musicIsLive ? "91" : "140",
         requestOptions:{
             headers:{
-                'cookie':config.ytcookie,
-                'x-youtube-identity-token':config.ytidtoken,
+                'cookie':config.ytCookie,
+                'x-youtube-identity-token':config.ytIdToken,
             }
         }
     })))
