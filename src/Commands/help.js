@@ -10,18 +10,10 @@ module.exports.run = (interaction) => {
             "   remove <number> --- removes the specified music depending on it's place in the queue'\n" +
             "   queue --- displays the current music queue informations\n" +
             "   shuffle --- shuffles the current music queue\n" +
-            ":pinched_fingers: **FUNNY:**\n" +
-            "   howsmart <@user>/<text> --- tells you the mentioned user/thing in text iq\n" +
-            "   meme --- Sends a meme from reddit\n" +
-            "   relationship --- asks you if you want to mary another random user\n" +
-            "   dadjoke --- Sends a dadjoke \n" +
-            ":wrench: **TOOLS:**\n" +
             "   download  <key-words> --- downloads the music and sends it to the channel\n" +
-            "   weather <city-name> --- Gives you the weather for the specified city \n" +
             ":question: **OTHER:**\n" +
             "   help --- gives you the different commands syntax\n" +
-            "   ping --- pings the bot\n" +
-            "   echo <text> --- resends the specified text \n";
+            "   ping --- pings the bot\n"
         resolve(message)
     })
 };
