@@ -6,6 +6,11 @@ module.exports.run =async (interaction) => {
         getVideoSearch(interaction.options.get("song").value).then((result)=>{
             if (result.musics.length == 1) {
                 resolve("Trying to download your song please wait...")
+                if(result.musics[0].musicIsLive)
+                {
+                    interaction.channel.send(`Error can't download live video.`)
+                    return
+                }
                 downloadAudio(result.musics[0].musicUrl).then((fileName)=>{
                     interaction.channel.send({
                         content:result.musics[0].musicTitle+" was downloaded",
