@@ -1,4 +1,4 @@
-const { Client, Events, GatewayIntentBits } = require('discord.js');
+const { Client, Events, GatewayIntentBits, MessageAttachment } = require('discord.js');
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -40,57 +40,38 @@ fs.readdir("./Events/", (error, f) => {
     });
 });
 
-function removeCommand(id){
-    client.application.commands.delete(id)
-}
+client.on('ready', async () => {
+    let commands = []
+    fs.readdir("./Commands/",(error, f) => {
+        if(error) console.log(error);
 
-function postCommand(command){
-    client.application.commands.create(client.user.id).commands.post({data:{
-            name: command.name,
-            description: command.description,
-            options:command.options
-        }})
-}
+        let files = f.filter(f => f.split(".").pop() === "js");
+        if(files.length <=0) return console.log("No commands found !")
 
-
-async function getCommands(){
-    return new Promise(async function (resolve,reject){
-        resolve(await client.application.commands.fetch())
-    })
-}
-
-function isPresentOnBot(name,commands){
-    for(var command of commands){
-        if(command[1].name == name){
-            return true
+        files.forEach((file) => {
+            let command = require(`./Commands/${file}`);
+            commands.push({
+                name:command.help.name,
+                description:command.help.description,
+                options:command.help.options
+            })
+        });
+    });
+    let upCommands = await client.application.commands.fetch();
+    commands.forEach(command => {
+        if(!upCommands.some(upCommand => upCommand.name === command.name)){
+            console.log(`Creating command ${command.name}`)
+            client.application.commands.create({
+                    name: command.name,
+                    description: command.description,
+                    options: command.options
+            })
         }
-    }
-    return false
-}
-function isPresentOnDiscord(name,commands){
-    for(let i = 0; i<commands.length; i++)
-    {
-        if(commands[i].name == name)
-        {
-            return true
-        }
-    }
-    return false
-}
-
-client.on('ready',()=>{
-    getCommands().then((slashCommands)=>{
-        for(var i=0;i<GlobalCommands.length;i++){
-            if(!isPresentOnBot(GlobalCommands[i].name,slashCommands)){
-                console.log("Posting command: " + GlobalCommands[i].name)
-                postCommand(GlobalCommands[i])
-            }
-        }
-        for(var slashCommand of slashCommands){
-            if(!isPresentOnDiscord(slashCommand[1].name,GlobalCommands)){
-                console.log("Removing command: " + slashCommand[1].name)
-                removeCommand(slashCommand[1].id)
-            }
+    });
+    upCommands.forEach(upCommand => {
+        if(!commands.some(command => command.name === upCommand.name)){
+            console.log(`Deleting command ${upCommand.name}`)
+            client.application.commands.delete(upCommand.id)
         }
     })
     for(var guild of client.guilds.cache.entries()){
@@ -98,11 +79,11 @@ client.on('ready',()=>{
     }
 })
 
-client.on('guildCreate',(guild)=>{
+client.on(Events.GuildCreate,(guild)=>{
     new ServerInfo.ServerInfo(guild.id)
 })
 
-client.on("guildDelete",(guild)=>{
+client.on(Events.GuildDelete,(guild)=>{
     for(let i=0;i<ServerInfo.ServerInfos.length;i++){
         if(guild.id==ServerInfo.ServerInfos[i].ID){
             ServerInfo.ServerInfos.splice(i,1)
@@ -116,12 +97,19 @@ client.on(Events.InteractionCreate, async interaction => {
     cmd.run(interaction).then(async reply => {
         if(typeof reply === 'string')
         {
-            substrings = []
-            for (let i = 0; i < reply.length; i += 2000)
-                substrings.push(reply.substr(i, 2000));
-            interaction.editReply(substrings[0])
-            for(let i = 1;i < substrings.length;i++)
-                interaction.channel.send(substrings[i])
+            if (reply.length<2000){
+                interaction.editReply(reply)
+            }
+            else
+            {
+                interaction.editReply({
+                    content: 'Command response is too long, see full reply in this file.',
+                    files: [{
+                        attachment: Buffer.from(reply, 'utf-8'),
+                        name: 'RacBot Response.txt'
+                    }],
+                });
+            }
         }
         else
         {

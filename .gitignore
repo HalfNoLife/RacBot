@@ -1,6 +1,2 @@
-config.json
-node_modules
-*.idea
-*.vscode
-logs.txt
-bans.txt
+src/config.json
+src/node_modules
