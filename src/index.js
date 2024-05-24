@@ -57,9 +57,9 @@ client.on('ready', async () => {
             })
         });
     });
-    let upCommands = await client.application.commands.fetch();
+    let upCommands = [...(await client.application.commands.fetch()).entries()];
     commands.forEach(command => {
-        if(!upCommands.some(upCommand => upCommand.name === command.name)){
+        if(!upCommands.some(upCommand => upCommand[1].name === command.name)){
             console.log(`Creating command ${command.name}`)
             client.application.commands.create({
                     name: command.name,
@@ -69,9 +69,9 @@ client.on('ready', async () => {
         }
     });
     upCommands.forEach(upCommand => {
-        if(!commands.some(command => command.name === upCommand.name)){
-            console.log(`Deleting command ${upCommand.name}`)
-            client.application.commands.delete(upCommand.id)
+        if(!commands.some(command => command.name === upCommand[1].name)){
+            console.log(`Deleting command ${upCommand[1].name}`)
+            client.application.commands.delete(upCommand[1].id)
         }
     })
     for(var guild of client.guilds.cache.entries()){
