@@ -20,12 +20,13 @@ function testPlayConditions(interaction) {
 
 async function playSong(serverInfo)
 {
-    serverInfo.audioStream.play(createAudioResource(ytdl(serverInfo.playlist[0].musicUrl+"&bpctr=9999999999&has_verified=1",
+    serverInfo.audioStream.play(createAudioResource(ytdl(serverInfo.playlist[0].musicUrl,
     {
-        filter:serverInfo.playlist[0].musicIsLive ? null : "audioonly",
-        highWaterMark:1<<25,
-        maxReconnect:5,
-        quality:serverInfo.playlist[0].musicIsLive ? "91" : "140",
+        filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
+        liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
+        highWaterMark: 1<<32,
+        maxReconnect: 5,
+        quality: 'highestaudio',
         requestOptions:{
             headers:{
                 'cookie':config.ytCookie,
@@ -85,6 +86,7 @@ module.exports.run = (interaction) => {
                     playSong(serverInfo)
                 else
                     serverInfo.voiceConnection.disconnect();
+                
             })
             .on('error', e => {
                 console.log(e)

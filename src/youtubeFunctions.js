@@ -12,14 +12,14 @@ const config = require("./config.json");
 function getVideoSearch(args)
 {
     return new Promise(async (resolve,reject)=>{
-        const search_result = (await axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(args)}&key=${config.ytDataApiV3}`)).data;
+        const search_result = (await axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist|video&maxResults=1&q=${encodeURIComponent(args)}&key=${config.ytDataApiV3}`)).data;
         let title = he.decode(search_result.items[0].snippet.title);
         let musics = [];
         if(search_result.items[0].id.kind == "youtube#video"){
             let musicUrl = `https://www.youtube.com/watch?v=${search_result.items[0].id.videoId}`;
             let musicTitle = he.decode(search_result.items[0].snippet.title);
             let musicThumbnail = search_result.items[0].snippet.thumbnails.high.url;
-            let musicIsLive = false;//search_result.badges.some(badge => badge === "LIVE" || badge === "PREMIERE")
+            let musicIsLive = search_result.items[0].snippet.liveBroadcastContent === "live";
             let music={musicUrl,musicTitle,musicThumbnail,musicIsLive};
             musics.push(music);
             resolve({title, musics})
@@ -32,7 +32,7 @@ function getVideoSearch(args)
                     let musicUrl=`https://www.youtube.com/watch?v=${playlist.items[i].snippet.resourceId.videoId}`;
                     let musicTitle=he.decode(playlist.items[i].snippet.title);
                     let musicThumbnail=playlist.items[i].snippet.thumbnails.high.url;
-                    let musicIsLive = false;
+                    let musicIsLive = (await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${playlist.items[i].snippet.resourceId.videoId}&key=${config.ytDataApiV3}`)).data.items[0].snippet.liveBroadcastContent === "live"
                     let music={musicUrl,musicTitle,musicThumbnail,musicIsLive};
                     musics.push(music);
                 }
