@@ -92,7 +92,13 @@ client.on(Events.GuildDelete,(guild)=>{
 })
 
 client.on(Events.InteractionCreate, async interaction => {
+    if (!interaction.isCommand()) return;
     await interaction.deferReply();
+    if(interaction.guildId == null)
+    {
+        interaction.editReply("Sorry, I do not handle DM requests.")
+        return
+    }
     cmd = require(`./Commands/${interaction.commandName}`)
     cmd.run(interaction).then(async reply => {
         if(typeof reply === 'string')
