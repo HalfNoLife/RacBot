@@ -20,23 +20,30 @@ function testPlayConditions(interaction) {
 
 async function playSong(serverInfo)
 {
-    serverInfo.audioStream.play(createAudioResource(ytdl(serverInfo.playlist[0].musicUrl,
-    {
-        filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
-        liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
-        highWaterMark: 1<<25,
-        dlChunkSize: 1<<12,
-        maxReconnect: 5,
-        opusEncoded: true,
-        audioFormat: 'mp3',
-        quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
-        requestOptions:{
-            headers:{
-                'cookie':config.ytCookie,
-                'x-youtube-identity-token':config.ytIdToken,
+    serverInfo.audioStream.play(createAudioResource(
+        ytdl(serverInfo.playlist[0].musicUrl,
+        {
+            quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
+            filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
+            liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
+            highWaterMark: 1<<25,
+            dlChunkSize: 1<<12,
+            maxReconnect: 30,
+            opusEncoded: true,
+            videoFormat: 'mp4',
+            audioFormat: 'mp3',
+            requestOptions:{
+                headers:{
+                    'cookie':config.ytCookie,
+                    'x-youtube-identity-token':config.ytIdToken,
+                }
             }
-        }
-    })))
+        }).on('end', ()=>{
+            console.log("Music ended")
+            if(serverInfo.playlist[0].musicIsLive)
+                serverInfo.playlist[0].musicIsLive = false
+        })
+    ))
 }
 
 module.exports.run = (interaction) => {
@@ -81,7 +88,8 @@ module.exports.run = (interaction) => {
                 },
             });
             serverInfo.audioStream
-            .on('idle',()=>{
+            .on('idle',() => {
+                if(serverInfo.playlist[0].musicIsLive) return
                 if(serverInfo.isLooping)
                     serverInfo.playlist.push(serverInfo.playlist[0])
                 serverInfo.playlist.shift()
