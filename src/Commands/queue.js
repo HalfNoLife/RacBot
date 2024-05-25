@@ -8,7 +8,7 @@ module.exports.run =async (interaction) => {
             queueInfos = queueInfos + (i+1) + " - " + serverInfo.playlist[i].musicTitle+"\n"
         if(serverInfo.playlist.length == 0)
             queueInfos = "There is no song on your server playlist for now\n"
-        if(serverInfo.Loop){
+        if(serverInfo.isLooping){
             queueInfos=queueInfos+("And the playlist is currently looping")
         } else {
             queueInfos=queueInfos+("And the playlist is currently not looping")
