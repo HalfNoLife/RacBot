@@ -39,7 +39,6 @@ async function playSong(serverInfo)
                 }
             }
         }).on('end', ()=>{
-            console.log("Music ended")
             if(serverInfo.playlist[0].musicIsLive)
                 serverInfo.playlist[0].musicIsLive = false
         })
