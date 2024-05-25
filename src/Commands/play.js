@@ -20,27 +20,27 @@ function testPlayConditions(interaction) {
 
 async function playSong(serverInfo)
 {
-    serverInfo.audioStream.play(createAudioResource(
-        ytdl(serverInfo.playlist[0].musicUrl,
-        {
-            quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
-            filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
-            liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
-            highWaterMark: 1<<25,
-            dlChunkSize: 1<<12,
-            maxReconnect: 30,
-            opusEncoded: true,
-            videoFormat: 'mp4',
-            audioFormat: 'mp3',
-            requestOptions:{
-                headers:{
-                    'cookie':config.ytCookie,
-                    'x-youtube-identity-token':config.ytIdToken,
-                }
+    serverInfo.playlist[0].musicEnded = false
+    let musicStream = ytdl(serverInfo.playlist[0].musicUrl, {
+        quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
+        filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
+        liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
+        highWaterMark: 1<<25,
+        requestOptions:{
+            headers:{
+                'cookie':config.ytCookie,
+                'x-youtube-identity-token':config.ytIdToken,
             }
-        }).on('end', ()=>{
-            if(serverInfo.playlist[0].musicIsLive)
-                serverInfo.playlist[0].musicIsLive = false
+        }
+    })
+    //Pause the stream for a second before playing music to avoid bug especially with live videos
+    musicStream.pause()
+    setTimeout(()=>{
+        musicStream.resume()
+    },1000)
+    serverInfo.audioStream.play(createAudioResource(musicStream
+        .on('end', ()=>{
+            serverInfo.playlist[0].musicEnded = true
         })
     ))
 }
@@ -88,7 +88,7 @@ module.exports.run = (interaction) => {
             });
             serverInfo.audioStream
             .on('idle',() => {
-                if(serverInfo.playlist[0].musicIsLive) return
+                if(!serverInfo.playlist[0].musicEnded) return
                 if(serverInfo.isLooping)
                     serverInfo.playlist.push(serverInfo.playlist[0])
                 serverInfo.playlist.shift()

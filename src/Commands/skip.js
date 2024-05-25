@@ -6,8 +6,8 @@ module.exports.run = async (interaction) => {
         let serverInfo = serverInfos.find((elm)=>elm.guildId == interaction.guildId)
         if(serverInfo.audioStream != null && serverInfo.audioStream.state.status != 'idle')
         {
-            if(serverInfo.playlist[0].musicIsLive)
-                serverInfo.playlist[0].musicIsLive = false
+            
+            serverInfo.playlist[0].musicEnded = true
             serverInfo.audioStream.stop()
             resolve("Music skiped succesfully")
         }

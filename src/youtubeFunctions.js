@@ -29,11 +29,12 @@ function getVideoSearch(args)
                 var playlist = (await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${encodeURIComponent(search_result.items[0].id.playlistId)}${firstIter ? '' : `&pageToken=${playlist.nextPageToken}`}&key=${config.ytDataApiV3}`)).data
                 if (firstIter) firstIter = false
                 for(let i = 0; i<playlist.items.length; i++){
-                    let musicUrl=`https://www.youtube.com/watch?v=${playlist.items[i].snippet.resourceId.videoId}`;
-                    let musicTitle=he.decode(playlist.items[i].snippet.title);
-                    let musicThumbnail=playlist.items[i].snippet.thumbnails.high.url;
+                    let musicEnded = false
+                    let musicUrl =`https://www.youtube.com/watch?v=${playlist.items[i].snippet.resourceId.videoId}`;
+                    let musicTitle = he.decode(playlist.items[i].snippet.title);
+                    let musicThumbnail = playlist.items[i].snippet.thumbnails.high.url;
                     let musicIsLive = (await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${playlist.items[i].snippet.resourceId.videoId}&key=${config.ytDataApiV3}`)).data.items[0].snippet.liveBroadcastContent === "live"
-                    let music={musicUrl,musicTitle,musicThumbnail,musicIsLive};
+                    let music={musicUrl,musicTitle,musicThumbnail,musicIsLive,musicEnded};
                     musics.push(music);
                 }
             } while (playlist.nextPageToken != undefined);
