@@ -1,11 +1,13 @@
 const serverInfos = require("../serverInfos").ServerInfos
 const youtubeFunctions = require("../youtubeFunctions")
 const status = require("../status")
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, VoiceConnectionStatus } = require('@discordjs/voice');
+const config = require("../config.json")
+
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior } = require('@discordjs/voice');
 const ytdl = require("ytdl-core");
 const { EmbedBuilder,PermissionsBitField  } = require("discord.js");
 
-const config = require("../config.json")
+
 
 function testPlayConditions(interaction) {
     if(interaction.member.voice.channel == null)
@@ -21,24 +23,19 @@ function testPlayConditions(interaction) {
 async function playSong(serverInfo)
 {
     serverInfo.playlist[0].musicEnded = false
-    let musicStream = ytdl(serverInfo.playlist[0].musicUrl, {
-        quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
-        filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
-        liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
-        highWaterMark: 1<<25,
-        requestOptions:{
-            headers:{
-                'cookie':config.ytCookie,
-                'x-youtube-identity-token':config.ytIdToken,
+    serverInfo.audioStream.play(createAudioResource(
+        ytdl(serverInfo.playlist[0].musicUrl, { 
+            quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
+            filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
+            liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
+            highWaterMark: 1<<25,
+            requestOptions:{
+                headers:{
+                    'cookie':config.ytCookie,
+                    'x-youtube-identity-token':config.ytIdToken,
+                }
             }
-        }
-    })
-    //Pause the stream for a second before playing music to avoid bug especially with live videos
-    musicStream.pause()
-    setTimeout(()=>{
-        musicStream.resume()
-    },1000)
-    serverInfo.audioStream.play(createAudioResource(musicStream
+        })
         .on('end', ()=>{
             serverInfo.playlist[0].musicEnded = true
         })
