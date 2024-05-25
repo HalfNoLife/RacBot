@@ -24,9 +24,12 @@ async function playSong(serverInfo)
     {
         filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
         liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
-        highWaterMark: 1<<32,
+        highWaterMark: 1<<25,
+        dlChunkSize: 1<<12,
         maxReconnect: 5,
-        quality: 'highestaudio',
+        opusEncoded: true,
+        audioFormat: 'mp3',
+        quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
         requestOptions:{
             headers:{
                 'cookie':config.ytCookie,
