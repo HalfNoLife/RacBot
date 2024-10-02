@@ -4,7 +4,7 @@ const status = require("../status")
 const config = require("../config.json")
 
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior } = require('@discordjs/voice');
-const ytdl = require("ytdl-core");
+const ytdl = require("@distube/ytdl-core");
 const { EmbedBuilder,PermissionsBitField  } = require("discord.js");
 
 
