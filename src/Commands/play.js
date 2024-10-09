@@ -2,9 +2,10 @@ const serverInfos = require("../serverInfos").ServerInfos
 const youtubeFunctions = require("../youtubeFunctions")
 const status = require("../status")
 const config = require("../config.json")
-
+const fs = require("fs")
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior } = require('@discordjs/voice');
 const ytdl = require("@distube/ytdl-core");
+const agent = ytdl.createAgent(config.cookies)
 const { EmbedBuilder,PermissionsBitField  } = require("discord.js");
 
 
@@ -25,16 +26,12 @@ async function playSong(serverInfo)
     serverInfo.playlist[0].musicEnded = false
     serverInfo.audioStream.play(createAudioResource(
         ytdl(serverInfo.playlist[0].musicUrl, { 
+            agent: agent,
             quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
             filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
             liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
             highWaterMark: 1<<25,
-            requestOptions:{
-                headers:{
-                    'cookie':config.ytCookie,
-                    'x-youtube-identity-token':config.ytIdToken,
-                }
-            }
+            dlChunkSize: 0,
         })
         .on('end', ()=>{
             serverInfo.playlist[0].musicEnded = true
