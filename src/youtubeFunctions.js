@@ -3,7 +3,6 @@ const ytsr = require("@distube/ytsr")
 const config = require("./config.json")
 const agent = ytdl.createAgent(config.cookies)
 const fs = require("fs")
-const he = require("he")
 
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
 const ffmpeg = require('fluent-ffmpeg')
