@@ -1,14 +1,10 @@
 const serverInfos = require("../serverInfos").ServerInfos
-const youtubeFunctions = require("../youtubeFunctions")
+const {getVideoSearch, downloadAudio, getVideoStream} = require("../youtubeFunctions")
 const status = require("../status")
 const config = require("../config.json")
-const fs = require("fs")
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior } = require('@discordjs/voice');
-const ytdl = require("@distube/ytdl-core");
-const agent = ytdl.createAgent(config.cookies)
+
 const { EmbedBuilder,PermissionsBitField  } = require("discord.js");
-
-
 
 function testPlayConditions(interaction) {
     if(interaction.member.voice.channel == null)
@@ -25,14 +21,7 @@ async function playSong(serverInfo)
 {
     serverInfo.playlist[0].musicEnded = false
     serverInfo.audioStream.play(createAudioResource(
-        ytdl(serverInfo.playlist[0].musicUrl, { 
-            agent: agent,
-            quality: serverInfo.playlist[0].musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
-            filter: serverInfo.playlist[0].musicIsLive ? null : "audioonly",
-            liveBuffer: serverInfo.playlist[0].musicIsLive ? 4900 : null,
-            highWaterMark: 1<<25,
-            dlChunkSize: 0,
-        })
+        getVideoStream(serverInfo.playlist[0])        
         .on('end', ()=>{
             serverInfo.playlist[0].musicEnded = true
         })
@@ -67,43 +56,41 @@ module.exports.run = (interaction) => {
             }
         }
 
-        // Adding the musics
-        let result = await youtubeFunctions.getVideoSearch(interaction.options.get("music").value)
-        for(let i = 0;i<result.musics.length;i++)
-            serverInfo.playlist.push(result.musics[i])
-        
+        // Adding the music
+        let result = await getVideoSearch(interaction.options.get("music").value)
+        console.log(result)
+        serverInfo.playlist.push(result)
         // Intentiating audiostream
-        if(serverInfo.audioStream == null)
-        {
+        if(serverInfo.audioStream == null){
             serverInfo.audioStream = createAudioPlayer({
                 behaviors: {
                     noSubscriber: NoSubscriberBehavior.Stop,
                 },
             });
             serverInfo.audioStream
-            .on('idle',() => {
-                if(!serverInfo.playlist[0].musicEnded) return
-                if(serverInfo.isLooping)
-                    serverInfo.playlist.push(serverInfo.playlist[0])
-                serverInfo.playlist.shift()
-                if(serverInfo.playlist.length>0)
-                    playSong(serverInfo)
-                else
-                    serverInfo.voiceConnection.disconnect();
-                
-            })
-            .on('error', e => {
-                console.log(e)
-                interaction.channel.send("An error occured while playing: "+ serverInfo.playlist[0].musicTitle)
-            })
-            .on('playing',()=>{
-                let embed = new EmbedBuilder()
-                    .setColor("Red")
-                    .setTitle("Now playing : \n"+serverInfo.playlist[0].musicTitle)
-                    .setURL(serverInfo.playlist[0].musicUrl)
-                    .setImage(serverInfo.playlist[0].musicThumbnail)
-                interaction.channel.send({embeds:[embed]})
-            })
+                .on('idle',() => {
+                    if(!serverInfo.playlist[0].musicEnded) return
+                    if(serverInfo.isLooping)
+                        serverInfo.playlist.push(serverInfo.playlist[0])
+                    serverInfo.playlist.shift()
+                    if(serverInfo.playlist.length>0)
+                        playSong(serverInfo)
+                    else
+                        serverInfo.voiceConnection.disconnect();
+                    
+                })
+                .on('error', e => {
+                    console.log(e)
+                    interaction.channel.send("An error occured while playing: "+ serverInfo.playlist[0].musicTitle)
+                })
+                .on('playing',()=>{
+                    let embed = new EmbedBuilder()
+                        .setColor("Red")
+                        .setTitle("Now playing : \n"+serverInfo.playlist[0].musicTitle)
+                        .setURL(serverInfo.playlist[0].musicUrl)
+                        .setImage(serverInfo.playlist[0].musicThumbnail)
+                    interaction.channel.send({embeds:[embed]})
+                })
         }
 
         // Subscribing the audioStream
@@ -112,7 +99,7 @@ module.exports.run = (interaction) => {
         // Starting the player if needed
         if(serverInfo.audioStream.state.status === 'idle' || serverInfo.audioStream.state.status === 'autopaused')
             playSong(serverInfo)
-        resolve(result.title + " was successfully added to the playlist.")
+        resolve(result.musicTitle + " was successfully added to the playlist.")
     })
 };
 

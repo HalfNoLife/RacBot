@@ -1,5 +1,7 @@
-const axios = require("axios")
 const ytdl = require("@distube/ytdl-core")
+const ytsr = require("@distube/ytsr")
+const config = require("./config.json")
+const agent = ytdl.createAgent(config.cookies)
 const fs = require("fs")
 const he = require("he")
 
@@ -7,39 +9,17 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
 const ffmpeg = require('fluent-ffmpeg')
 ffmpeg.setFfmpegPath(ffmpegPath)
 
-const config = require("./config.json");
-
-function getVideoSearch(args)
-{
-    return new Promise(async (resolve,reject)=>{
-        const search_result = (await axios.get(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist|video&maxResults=1&q=${encodeURIComponent(args)}&key=${config.ytDataApiV3}`)).data;
-        let title = he.decode(search_result.items[0].snippet.title);
-        let musics = [];
-        if(search_result.items[0].id.kind == "youtube#video"){
-            let musicUrl = `https://www.youtube.com/watch?v=${search_result.items[0].id.videoId}`;
-            let musicTitle = he.decode(search_result.items[0].snippet.title);
-            let musicThumbnail = search_result.items[0].snippet.thumbnails.high.url;
-            let musicIsLive = search_result.items[0].snippet.liveBroadcastContent === "live";
-            let music={musicUrl,musicTitle,musicThumbnail,musicIsLive};
-            musics.push(music);
-            resolve({title, musics})
-        } else {
-            let firstIter = true
-            do {
-                var playlist = (await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${encodeURIComponent(search_result.items[0].id.playlistId)}${firstIter ? '' : `&pageToken=${playlist.nextPageToken}`}&key=${config.ytDataApiV3}`)).data
-                if (firstIter) firstIter = false
-                for(let i = 0; i<playlist.items.length; i++){
-                    let musicEnded = false
-                    let musicUrl =`https://www.youtube.com/watch?v=${playlist.items[i].snippet.resourceId.videoId}`;
-                    let musicTitle = he.decode(playlist.items[i].snippet.title);
-                    let musicThumbnail = playlist.items[i].snippet.thumbnails.high.url;
-                    let musicIsLive = (await axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${playlist.items[i].snippet.resourceId.videoId}&key=${config.ytDataApiV3}`)).data.items[0].snippet.liveBroadcastContent === "live"
-                    let music={musicUrl,musicTitle,musicThumbnail,musicIsLive,musicEnded};
-                    musics.push(music);
-                }
-            } while (playlist.nextPageToken != undefined);
-            resolve({title, musics})
-        }
+async function getVideoSearch(request){
+    return new Promise(async resolve => {
+        ytsr(request, {  limit: 1 }).then(result => {
+            if(result.items[0].type === "video") {
+                let musicUrl = result.items[0].url
+                let musicTitle = result.items[0].name
+                let musicThumbnail = result.items[0].thumbnail
+                let musicIsLive = result.items[0].isLive
+                resolve({musicUrl,musicTitle,musicThumbnail,musicIsLive})
+            }
+          })
     })
 }
 
@@ -93,5 +73,15 @@ async function downloadAudio(url){
     })
 }
 
+function getVideoStream(music){
+    return ytdl(music.musicUrl, { 
+        agent: agent,
+        quality: music.musicIsLive ? [91, 92, 93, 94, 95] : "highestaudio",
+        filter: music.musicIsLive ? null : "audioonly",
+        liveBuffer: music.musicIsLive ? 4900 : null,
+        highWaterMark: 1<<25,
+        dlChunkSize: 0,
+    })
+}
 
-module.exports = {getVideoSearch,downloadAudio}
+module.exports = {getVideoSearch, downloadAudio, getVideoStream}
